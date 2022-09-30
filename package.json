@@ -20,11 +20,17 @@
     "url": "https://github.com/AIMS-UN/api-gateway/issues"
   },
   "homepage": "https://github.com/AIMS-UN/api-gateway#readme",
+  "_moduleAliases": {
+    "@": "src"
+  },
   "devDependencies": {
     "@commitlint/cli": "17.1.2",
     "@commitlint/config-conventional": "17.1.0",
     "husky": "^8.0.0",
     "ts-standard": "11.0.0",
     "typescript": "4.4.4"
+  },
+  "dependencies": {
+    "module-alias": "2.2.2"
   }
 }
