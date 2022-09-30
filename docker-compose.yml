@@ -5,4 +5,6 @@ services:
     build: .
     image: aims_api_gateway
     container_name: aims_api_gateway
+    ports:
+      - "3000:3000"
     
