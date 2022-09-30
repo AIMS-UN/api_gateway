@@ -1,7 +1,10 @@
 import 'module-alias/register'
+import 'reflect-metadata'
 
 import express from 'express'
 import morgan from 'morgan'
+import { startServer } from './app'
+
 import {
   PORT,
   HOST,
@@ -9,20 +12,18 @@ import {
   LOG_LEVEL
 } from '@configs/index'
 
-// Create a new express application instance
 const app = express()
 
-// Middlewares
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+// Setup logging
 app.use(morgan(LOG_LEVEL))
 
-// Routes
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+// Setup graphql
+startServer().then(server => {
+  server.applyMiddleware({ app, path: '/graphql' })
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running at http://${HOST}:${PORT} in ${NODE_ENV} mode`)
+  app.listen(PORT, () => {
+    console.log(`Server running on ${NODE_ENV} mode at http://${HOST}:${PORT}/graphql`)
+  })
+}).catch(err => {
+  console.error('Error starting server', err)
 })
