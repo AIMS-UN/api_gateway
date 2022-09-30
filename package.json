@@ -7,7 +7,8 @@
     "start": "tsc && node dist/index.js",
     "lint:check": "ts-standard",
     "lint:fix": "ts-standard --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,9 @@
   },
   "homepage": "https://github.com/AIMS-UN/api-gateway#readme",
   "devDependencies": {
+    "@commitlint/cli": "17.1.2",
+    "@commitlint/config-conventional": "17.1.0",
+    "husky": "^8.0.0",
     "ts-standard": "11.0.0",
     "typescript": "4.4.4"
   }
