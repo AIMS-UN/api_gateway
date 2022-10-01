@@ -9,6 +9,7 @@
     "dev": "npm run build && npm run start",
     "lint:check": "ts-standard",
     "lint:fix": "ts-standard --fix",
+    "type:check": "tsc --noEmit --pretty",
     "commit": "cz",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install"
@@ -39,6 +40,7 @@
     "commitizen": "4.2.5",
     "cz-git": "1.3.11",
     "husky": "8.0.0",
+    "lint-staged": "13.0.3",
     "ts-standard": "11.0.0",
     "typescript": "4.4.4"
   },
