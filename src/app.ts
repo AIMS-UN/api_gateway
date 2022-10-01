@@ -6,7 +6,7 @@ import { resolvers } from '@/resolvers/index'
 // Setup Apollo Server
 export const startServer = async (): Promise<ApolloServer> => {
   const server = new ApolloServer({
-    schema: await buildSchema({ resolvers: resolvers }),
+    schema: await buildSchema({ resolvers }),
     context: ({ req, res }) => ({ req, res })
   })
   await server.start()
