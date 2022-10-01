@@ -1,0 +1,13 @@
+version: "3.8"
+name: "aims"
+services:
+  aims_api_gateway:
+    build: .
+    image: aims_api_gateway
+    container_name: aims_api_gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - LOG_LEVEL=dev
+      - PORT=3000
