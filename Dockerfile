@@ -1,24 +1,24 @@
-FROM node:latest as builder
+FROM node:lts as builder
 
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci --development
 
 COPY tsconfig.json ./
 COPY src ./src
 
 RUN npm run build
 
-FROM node:latest as runner
+FROM node:lts-slim as runner
 
 WORKDIR /app
 
 COPY package*.json ./
 
 RUN npm pkg delete scripts.prepare
-RUN npm install --omit=dev
+RUN npm ci --production
 
 
 COPY --from=builder /app/dist ./dist

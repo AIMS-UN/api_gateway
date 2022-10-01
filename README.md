@@ -8,10 +8,13 @@ This is the API gateway for the AIMS project.
 
 ### Technologies Used
 
-|                         |                                                    |
-| ----------------------- | -------------------------------------------------- |
-| Language                | [TypeScript](https://www.typescriptlang.org/)      |
-| Runtime                 | [Node.js](https://nodejs.org/en/)                  |
-| Containerization        | [Docker](https://www.docker.com/)                  |
-| Container Orchestration | [Docker Compose](https://docs.docker.com/compose/) |
-| Code Style              | [standard](https://standardjs.com/) \*ts-standard  |
+|                         |                                                                    |
+| ----------------------- | ------------------------------------------------------------------ |
+| Language                | [TypeScript](https://www.typescriptlang.org/)                      |
+| Runtime                 | [Node.js](https://nodejs.org/en/)                                  |
+| Web Framework           | [Express](https://expressjs.com/)                                  |
+| API Query Language      | [GraphQL](https://graphql.org/)                                    |
+| GraphQL Server          | [Apollo Server](https://www.apollographql.com/docs/apollo-server/) |
+| Containerization        | [Docker](https://www.docker.com/)                                  |
+| Container Orchestration | [Docker Compose](https://docs.docker.com/compose/)                 |
+| Code Style              | [standard](https://standardjs.com/) \*ts-standard                  |
