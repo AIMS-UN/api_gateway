@@ -29,9 +29,7 @@
     }
   },
   "_moduleAliases": {
-    "@": "dist",
-    "@configs": "dist/configs",
-    "@resolvers": "dist/resolvers"
+    "@": "dist"
   },
   "devDependencies": {
     "@commitlint/cli": "17.1.2",

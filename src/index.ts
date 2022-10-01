@@ -5,12 +5,7 @@ import express from 'express'
 import morgan from 'morgan'
 import { startServer } from './app'
 
-import {
-  PORT,
-  HOST,
-  NODE_ENV,
-  LOG_LEVEL
-} from '@configs/index'
+import { PORT, HOST, NODE_ENV, LOG_LEVEL } from '@/configs/index'
 
 const app = express()
 

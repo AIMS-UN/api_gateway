@@ -5,9 +5,7 @@
     "rootDir": "src",
     "moduleResolution": "Node",
     "paths": {
-      "@/*": ["./src/*"],
-      "@configs/*": ["./src/configs/*"],
-      "@resolvers/*": ["./src/resolvers/*"]
+      "@/*": ["./src/*"]
     },
     "resolveJsonModule": true,
     "allowJs": true,
