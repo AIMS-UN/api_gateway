@@ -11,3 +11,4 @@ services:
       - NODE_ENV=development
       - LOG_LEVEL=dev
       - PORT=3000
+      - ACCOUNTS_MS_BASE_URL= http://aims_accounts_ms:3001
