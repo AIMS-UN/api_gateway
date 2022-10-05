@@ -1,22 +1,22 @@
-import { ID, Field, ObjectType } from 'type-graphql'
+import { Field, ObjectType } from 'type-graphql'
 
 @ObjectType()
 export class Enrollment {
-  @Field((type) => ID)
-  id!: number
+  @Field()
+  enrolment_id!: number
 
   @Field()
-  user!: string
+  user_id!: string
 
   @Field()
-  group!: string
+  group_id!: number
 
   @Field()
-  subject!: string
+  subject_id!: number
 
   @Field()
   semester!: string
 
   @Field({ nullable: true })
-  finalGrade!: number
+  final_grade?: number
 }
