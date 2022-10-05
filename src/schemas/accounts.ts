@@ -2,7 +2,7 @@ import { ID, Field, ObjectType } from 'type-graphql'
 
 @ObjectType()
 export class User {
-  @Field(type => ID)
+  @Field(_type => ID)
   id!: number
 
   @Field()
@@ -19,4 +19,13 @@ export class User {
 
   @Field({ nullable: true })
   createdAt?: string
+}
+
+@ObjectType()
+export class Session {
+  @Field()
+  token!: string
+
+  @Field()
+  user!: User
 }
