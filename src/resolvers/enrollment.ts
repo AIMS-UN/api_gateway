@@ -1,42 +1,33 @@
-import { Arg, Args, ArgsType, Field, Mutation, Query, Resolver } from 'type-graphql'
+import { Arg, Query, Resolver, Mutation } from 'type-graphql'
 import * as enrollmentService from '@/services/enrollment'
-import { Enrollment } from '@/schemas/enrollment'
-
-@ArgsType()
-class GetEnrollmentsArgs {
-  @Field({ nullable: true })
-  userId?: string
-
-  @Field({ nullable: true })
-  groupId?: string
-
-  @Field({ nullable: true })
-  subjectId?: string
-
-  @Field({ nullable: true })
-  semester?: string
-}
+import { Enrollment, EnrollmentInput } from '@/schemas/enrollment'
 
 @Resolver()
 export class EnrollmentResolver {
-  // private readonly enrollmentsList: Enrollment[] = []
+  enrollmentsList: Enrollment[] = []
 
   @Query(() => [Enrollment])
-  async getEnrollments (@Args() { userId, groupId, subjectId, semester }: GetEnrollmentsArgs): Promise<[Enrollment]> {
+  async getEnrollments (@Arg('input') input: EnrollmentInput): Promise<Enrollment[]> {
+    const userId = input.user
+    const groupId = input.group
+    const subjectId = input.subject
+    const semester = input.semester
     if (userId != null && groupId == null && subjectId == null && semester == null) {
-      return await enrollmentService.getEnrollmentsByUser(userId)
+      this.enrollmentsList = await enrollmentService.getEnrollmentsByUser(userId)
     } else if (userId == null && groupId != null && subjectId == null && semester == null) {
-      return await enrollmentService.getEnrollmentsByGroup(groupId)
+      this.enrollmentsList = await enrollmentService.getEnrollmentsByGroup(groupId)
     } else if (userId == null && groupId == null && subjectId != null && semester == null) {
-      return await enrollmentService.getEnrollmentsBySubject(subjectId)
+      this.enrollmentsList = await enrollmentService.getEnrollmentsBySubject(subjectId)
     } else if (userId == null && groupId == null && subjectId == null && semester != null) {
-      return await enrollmentService.getEnrollmentsBySemester(semester)
+      this.enrollmentsList = await enrollmentService.getEnrollmentsBySemester(semester)
     } else if (userId == null && groupId == null && subjectId != null && semester != null) {
-      return await enrollmentService.getEnrollmentsBySubjectAndSemester(subjectId, semester)
+      this.enrollmentsList = await enrollmentService.getEnrollmentsBySubjectAndSemester(subjectId, semester)
     } else if (userId != null && groupId == null && subjectId == null && semester != null) {
-      return await enrollmentService.getEnrollmentsByUserAndSemester(userId, semester)
+      this.enrollmentsList = await enrollmentService.getEnrollmentsByUserAndSemester(userId, semester)
+    } else {
+      this.enrollmentsList = await enrollmentService.getAllEnrollments()
     }
-    return await enrollmentService.getAllEnrollments()
+    return this.enrollmentsList
   }
 
   @Query(() => Enrollment)
@@ -45,17 +36,17 @@ export class EnrollmentResolver {
   }
 
   @Mutation(() => Enrollment)
-  async create (@Arg('enrollment') enrollment: Enrollment): Promise<Enrollment> {
-    return await enrollmentService.createEnrollment(enrollment)
+  async create (@Arg('input') input: EnrollmentInput): Promise<Enrollment> {
+    return await enrollmentService.createEnrollment(input)
   }
 
   @Mutation(() => Enrollment)
-  async cancel (@Arg('user') user: string, @Arg('subject') subject: string): Promise<Enrollment> {
-    return await enrollmentService.cancelEnrollment(user, subject)
+  async cancel (@Arg('input') input: EnrollmentInput): Promise<Enrollment> {
+    return await enrollmentService.cancelEnrollment(input)
   }
 
   @Mutation(() => Enrollment)
-  async setFinalGrade (@Arg('enrollment') enrollment: Enrollment): Promise<Enrollment> {
-    return await enrollmentService.updateFinalGrade(enrollment)
+  async setFinalGrade (@Arg('input') input: EnrollmentInput): Promise<Enrollment> {
+    return await enrollmentService.updateFinalGrade(input)
   }
 }

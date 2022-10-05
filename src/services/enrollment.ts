@@ -1,40 +1,40 @@
 import { getInstance } from '@/configs/axios'
-import { Enrollment } from '@/schemas/enrollment'
+import { Enrollment, EnrollmentInput } from '@/schemas/enrollment'
 
-const enrollmentMS = getInstance('aims_enrollments')
+const enrollmentMS = getInstance('enrollments')
 
-export const getAllEnrollments = async (): Promise<[Enrollment]> => {
-  const enrollments: [Enrollment] = await enrollmentMS.get('/enrollments')
+export const getAllEnrollments = async (): Promise<Enrollment[]> => {
+  const enrollments: Enrollment[] = await enrollmentMS.get('/enrollments')
   return await new Promise((resolve) => { resolve(enrollments) })
 }
 
-export const getEnrollmentsByUser = async (user: string): Promise<[Enrollment]> => {
-  const enrollments: [Enrollment] = await enrollmentMS.get(`/enrollments?user=${user}`)
+export const getEnrollmentsByUser = async (user: string): Promise<Enrollment[]> => {
+  const enrollments: Enrollment[] = await enrollmentMS.get(`/enrollments?user=${user}`)
   return await new Promise((resolve) => { resolve(enrollments) })
 }
 
-export const getEnrollmentsByGroup = async (group: string): Promise<[Enrollment]> => {
-  const enrollments: [Enrollment] = await enrollmentMS.get(`/enrollments?group=${group}`)
+export const getEnrollmentsByGroup = async (group: string): Promise<Enrollment[]> => {
+  const enrollments: Enrollment[] = await enrollmentMS.get(`/enrollments?group=${group}`)
   return await new Promise((resolve) => { resolve(enrollments) })
 }
 
-export const getEnrollmentsBySubject = async (subject: string): Promise<[Enrollment]> => {
-  const enrollments: [Enrollment] = await enrollmentMS.get(`/enrollments?subject=${subject}`)
+export const getEnrollmentsBySubject = async (subject: string): Promise<Enrollment[]> => {
+  const enrollments: Enrollment[] = await enrollmentMS.get(`/enrollments?subject=${subject}`)
   return await new Promise((resolve) => { resolve(enrollments) })
 }
 
-export const getEnrollmentsBySemester = async (semester: string): Promise<[Enrollment]> => {
-  const enrollments: [Enrollment] = await enrollmentMS.get(`/enrollments?semester=${semester}`)
+export const getEnrollmentsBySemester = async (semester: string): Promise<Enrollment[]> => {
+  const enrollments: Enrollment[] = await enrollmentMS.get(`/enrollments?semester=${semester}`)
   return await new Promise((resolve) => { resolve(enrollments) })
 }
 
-export const getEnrollmentsBySubjectAndSemester = async (subject: string, semester: string): Promise<[Enrollment]> => {
-  const enrollments: [Enrollment] = await enrollmentMS.get(`/enrollments?user=${subject}&semester=${semester}`)
+export const getEnrollmentsBySubjectAndSemester = async (subject: string, semester: string): Promise<Enrollment[]> => {
+  const enrollments: Enrollment[] = await enrollmentMS.get(`/enrollments?user=${subject}&semester=${semester}`)
   return await new Promise((resolve) => { resolve(enrollments) })
 }
 
-export const getEnrollmentsByUserAndSemester = async (user: string, semester: string): Promise<[Enrollment]> => {
-  const enrollments: [Enrollment] = await enrollmentMS.get(`/enrollments?user=${user}&semester=${semester}`)
+export const getEnrollmentsByUserAndSemester = async (user: string, semester: string): Promise<Enrollment[]> => {
+  const enrollments: Enrollment[] = await enrollmentMS.get(`/enrollments?user=${user}&semester=${semester}`)
   return await new Promise((resolve) => { resolve(enrollments) })
 }
 
@@ -43,17 +43,20 @@ export const getEnrollment = async (id: number): Promise<Enrollment> => {
   return await new Promise((resolve) => { resolve(enrollment) })
 }
 
-export const createEnrollment = async (enrollment: Enrollment): Promise<Enrollment> => {
-  const newEnrollment: Enrollment = await enrollmentMS.post('/enrollments', Enrollment)
+export const createEnrollment = async (enrollment: EnrollmentInput): Promise<Enrollment> => {
+  const newEnrollment: Enrollment = await enrollmentMS.post('/enrollments', EnrollmentInput)
   return await new Promise((resolve) => { resolve(newEnrollment) })
 }
 
-export const cancelEnrollment = async (user: string, subject: string): Promise<Enrollment> => {
-  const enrollment: Enrollment = await enrollmentMS.delete(`/enrollments?user=${user}&subject=&${subject}`)
-  return await new Promise((resolve) => { resolve(enrollment) })
+export const cancelEnrollment = async (enrollment: EnrollmentInput): Promise<Enrollment> => {
+  if (enrollment.user == null || enrollment.subject == null) {
+    return null as any
+  }
+  const cancelledEnrollment: Enrollment = await enrollmentMS.delete(`/enrollments?user=${enrollment.user}&subject=&${enrollment.subject}`)
+  return await new Promise((resolve) => { resolve(cancelledEnrollment) })
 }
 
-export const updateFinalGrade = async (enrollment: Enrollment): Promise<Enrollment> => {
-  const newEnrollment: Enrollment = await enrollmentMS.put('/enrollments/grade', enrollment)
+export const updateFinalGrade = async (enrollment: EnrollmentInput): Promise<Enrollment> => {
+  const newEnrollment: Enrollment = await enrollmentMS.put('/enrollments/grade', EnrollmentInput)
   return await new Promise((resolve) => { resolve(newEnrollment) })
 }

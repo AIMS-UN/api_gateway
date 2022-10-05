@@ -11,4 +11,3 @@ services:
       - NODE_ENV=development
       - LOG_LEVEL=dev
       - PORT=3000
-      - AIMS_ENROLLMENTS_MS_BASE_URL= http://aims_enrollment_ms:8080
