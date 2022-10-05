@@ -7,9 +7,7 @@ import { ExpressContext } from 'apollo-server-express'
 export class AccountResolver {
   @Query(() => User)
   async getUser (@Arg('username') username: string, @Ctx() context: ExpressContext): Promise<User> {
-    const pop = await getUserByUsername(username, context.req.headers.authorization)
-    console.log(JSON.stringify(pop))
-    return pop
+    return await getUserByUsername(username, context.req.headers.authorization)
   }
 
   @Mutation(() => Session)
