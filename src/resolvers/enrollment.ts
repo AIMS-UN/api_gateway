@@ -4,7 +4,7 @@ import { Enrollment, EnrollmentInput } from '@/schemas/enrollment'
 
 @Resolver()
 export class EnrollmentResolver {
-  enrollmentsList: Enrollment[] = []
+  // enrollmentsList: Enrollment[] = []
 
   @Query(() => [Enrollment])
   async getEnrollments (@Arg('input') input: EnrollmentInput): Promise<Enrollment[]> {
@@ -13,21 +13,21 @@ export class EnrollmentResolver {
     const subjectId = input.subject
     const semester = input.semester
     if (userId != null && groupId == null && subjectId == null && semester == null) {
-      this.enrollmentsList = await enrollmentService.getEnrollmentsByUser(userId)
+      return await enrollmentService.getEnrollmentsByUser(userId)
     } else if (userId == null && groupId != null && subjectId == null && semester == null) {
-      this.enrollmentsList = await enrollmentService.getEnrollmentsByGroup(groupId)
+      return await enrollmentService.getEnrollmentsByGroup(groupId)
     } else if (userId == null && groupId == null && subjectId != null && semester == null) {
-      this.enrollmentsList = await enrollmentService.getEnrollmentsBySubject(subjectId)
+      return await enrollmentService.getEnrollmentsBySubject(subjectId)
     } else if (userId == null && groupId == null && subjectId == null && semester != null) {
-      this.enrollmentsList = await enrollmentService.getEnrollmentsBySemester(semester)
+      return await enrollmentService.getEnrollmentsBySemester(semester)
     } else if (userId == null && groupId == null && subjectId != null && semester != null) {
-      this.enrollmentsList = await enrollmentService.getEnrollmentsBySubjectAndSemester(subjectId, semester)
+      return await enrollmentService.getEnrollmentsBySubjectAndSemester(subjectId, semester)
     } else if (userId != null && groupId == null && subjectId == null && semester != null) {
-      this.enrollmentsList = await enrollmentService.getEnrollmentsByUserAndSemester(userId, semester)
+      return await enrollmentService.getEnrollmentsByUserAndSemester(userId, semester)
     } else {
-      this.enrollmentsList = await enrollmentService.getAllEnrollments()
+      return await enrollmentService.getAllEnrollments()
     }
-    return this.enrollmentsList
+    // return this.enrollmentsList
   }
 
   @Query(() => Enrollment)

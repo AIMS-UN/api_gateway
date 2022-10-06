@@ -4,47 +4,47 @@ import { Enrollment, EnrollmentInput } from '@/schemas/enrollment'
 const enrollmentMS = getInstance('enrollments')
 
 export const getAllEnrollments = async (): Promise<Enrollment[]> => {
-  const enrollments: Enrollment[] = await enrollmentMS.get('/enrollments')
+  const { enrollments } = await enrollmentMS.get('/enrollments')
   return await new Promise((resolve) => { resolve(enrollments) })
 }
 
 export const getEnrollmentsByUser = async (user: string): Promise<Enrollment[]> => {
-  const enrollments: Enrollment[] = await enrollmentMS.get(`/enrollments?user=${user}`)
+  const { enrollments } = await enrollmentMS.get(`/enrollments?user=${user}`)
   return await new Promise((resolve) => { resolve(enrollments) })
 }
 
 export const getEnrollmentsByGroup = async (group: string): Promise<Enrollment[]> => {
-  const enrollments: Enrollment[] = await enrollmentMS.get(`/enrollments?group=${group}`)
+  const { enrollments } = await enrollmentMS.get(`/enrollments?group=${group}`)
   return await new Promise((resolve) => { resolve(enrollments) })
 }
 
 export const getEnrollmentsBySubject = async (subject: string): Promise<Enrollment[]> => {
-  const enrollments: Enrollment[] = await enrollmentMS.get(`/enrollments?subject=${subject}`)
+  const { enrollments } = await enrollmentMS.get(`/enrollments?subject=${subject}`)
   return await new Promise((resolve) => { resolve(enrollments) })
 }
 
 export const getEnrollmentsBySemester = async (semester: string): Promise<Enrollment[]> => {
-  const enrollments: Enrollment[] = await enrollmentMS.get(`/enrollments?semester=${semester}`)
+  const { enrollments } = await enrollmentMS.get(`/enrollments?semester=${semester}`)
   return await new Promise((resolve) => { resolve(enrollments) })
 }
 
 export const getEnrollmentsBySubjectAndSemester = async (subject: string, semester: string): Promise<Enrollment[]> => {
-  const enrollments: Enrollment[] = await enrollmentMS.get(`/enrollments?user=${subject}&semester=${semester}`)
+  const { enrollments } = await enrollmentMS.get(`/enrollments?user=${subject}&semester=${semester}`)
   return await new Promise((resolve) => { resolve(enrollments) })
 }
 
 export const getEnrollmentsByUserAndSemester = async (user: string, semester: string): Promise<Enrollment[]> => {
-  const enrollments: Enrollment[] = await enrollmentMS.get(`/enrollments?user=${user}&semester=${semester}`)
+  const { enrollments } = await enrollmentMS.get(`/enrollments?user=${user}&semester=${semester}`)
   return await new Promise((resolve) => { resolve(enrollments) })
 }
 
 export const getEnrollment = async (id: number): Promise<Enrollment> => {
-  const enrollment: Enrollment = await enrollmentMS.get(`/enrollments/${id}`)
+  const { enrollment } = await enrollmentMS.get(`/enrollments/${id}`)
   return await new Promise((resolve) => { resolve(enrollment) })
 }
 
 export const createEnrollment = async (enrollment: EnrollmentInput): Promise<Enrollment> => {
-  const newEnrollment: Enrollment = await enrollmentMS.post('/enrollments', EnrollmentInput)
+  const { newEnrollment } = await enrollmentMS.post('/enrollments', enrollment)
   return await new Promise((resolve) => { resolve(newEnrollment) })
 }
 
@@ -52,11 +52,11 @@ export const cancelEnrollment = async (enrollment: EnrollmentInput): Promise<Enr
   if (enrollment.user == null || enrollment.subject == null) {
     return null as any
   }
-  const cancelledEnrollment: Enrollment = await enrollmentMS.delete(`/enrollments?user=${enrollment.user}&subject=&${enrollment.subject}`)
+  const { cancelledEnrollment } = await enrollmentMS.delete(`/enrollments?user=${enrollment.user}&subject=&${enrollment.subject}`)
   return await new Promise((resolve) => { resolve(cancelledEnrollment) })
 }
 
 export const updateFinalGrade = async (enrollment: EnrollmentInput): Promise<Enrollment> => {
-  const newEnrollment: Enrollment = await enrollmentMS.put('/enrollments/grade', EnrollmentInput)
+  const { newEnrollment } = await enrollmentMS.put('/enrollments/grade', enrollment)
   return await new Promise((resolve) => { resolve(newEnrollment) })
 }
