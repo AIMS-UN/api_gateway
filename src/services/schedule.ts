@@ -4,9 +4,17 @@ const ScheduleInstance = getInstance('schedule')
 
 export const getSchedules = async (userId: string): Promise<Enrollment[]> => {
   const { data } = await ScheduleInstance.get(`/schedule/${userId}`)
-  return await new Promise((resolve) => {
-    resolve(data.data)
+  const result = data.data.map((enrollment: any) => {
+    return {
+      finalGrade: enrollment.final_grade,
+      group: enrollment.group_id,
+      id: enrollment.enrollment_id,
+      semester: enrollment.semester,
+      subject: enrollment.subject_id,
+      user: enrollment.user_id
+    }
   })
+  return await new Promise((resolve) => resolve(result))
 }
 
 export const getScheduleBySemester = async (
@@ -16,7 +24,16 @@ export const getScheduleBySemester = async (
   const { data } = await ScheduleInstance.get(
     `/schedule/${userId}/${semester}`
   )
-  return await new Promise((resolve) => {
-    resolve(data.data)
+  const result = data.data.map((enrollment: any) => {
+    return {
+      finalGrade: enrollment.final_grade,
+      group: enrollment.group_id,
+      id: enrollment.enrollment_id,
+      semester: enrollment.semester,
+      subject: enrollment.subject_id,
+      user: enrollment.user_id
+    }
   })
+
+  return await new Promise((resolve) => resolve(result))
 }
