@@ -1,4 +1,4 @@
-import { Arg, Mutation, Query, Resolver, Ctx} from 'type-graphql'
+import { Arg, Mutation, Query, Resolver, Ctx } from 'type-graphql'
 import { User, Session } from '@/schemas/accounts'
 import { getUserByUsername, loginUser, registerUser } from '@/services/accounts'
 import { ExpressContext } from 'apollo-server-express'
@@ -7,7 +7,8 @@ import { ExpressContext } from 'apollo-server-express'
 export class AccountResolver {
   @Query(() => User)
   async getUser (@Arg('username') username: string, @Ctx() context: ExpressContext): Promise<User> {
-    return await getUserByUsername(username, context.req.headers.authorization)
+    const authorization = context.req.headers.authorization ?? ''
+    return await getUserByUsername(username, authorization)
   }
 
   @Mutation(() => Session)
