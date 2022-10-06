@@ -1,43 +1,47 @@
 import { Category, Grade } from '@/schemas/grading'
 import * as gradingService from '@/services/grading'
 import { Arg, Mutation, Query, Resolver } from 'type-graphql'
+import { publish as mqPublish } from '@/mq/publisher'
 
 @Resolver()
 export class GradingResolver {
   @Query(() => [Category])
-  async getCategories (): Promise<Category[]> {
+  async getGradingCategories (): Promise<Category[]> {
     const a = await gradingService.getCategories()
     console.log(a)
     return a
   }
 
   @Query(() => Category)
-  async getCategoriesById (@Arg('id') id: string): Promise<Category> {
+  async getGradingCategory (@Arg('id') id: string): Promise<Category> {
     return await gradingService.getCategoryById(id)
   }
 
-  @Mutation(() => Category)
-  async createCategory (
+  @Mutation(() => String)
+  async createGradingCategory (
     @Arg('name') name: string,
       @Arg('weight') weight: number,
       @Arg('group_id') groupId: string,
-      @Arg('subject_id') subjectId: string): Promise<Category> {
-    return await gradingService.createCategory({ name, weight, group_id: groupId, subject_id: subjectId })
+      @Arg('subject_id') subjectId: string): Promise<String> {
+    await mqPublish('category.create', { name, weight, group_id: groupId, subject_id: subjectId })
+    return 'Category creation sent to queue'
   }
 
-  @Mutation(() => Category)
-  async updateCategory (
+  @Mutation(() => String)
+  async updateGradingCategory (
     @Arg('id') id: string,
       @Arg('name') name: string,
       @Arg('weight') weight: number,
       @Arg('groupId') groupId: string,
-      @Arg('subject_id') subjectId: string): Promise<Category> {
-    return await gradingService.updateCategory({ name, weight, group_id: groupId, subject_id: subjectId }, id)
+      @Arg('subject_id') subjectId: string): Promise<String> {
+    await mqPublish('category.update', { id, name, weight, group_id: groupId, subject_id: subjectId })
+    return 'Category update sent to queue'
   }
 
-  @Mutation(() => Category)
-  async deleteCategory (@Arg('id') id: string): Promise<Category> {
-    return await gradingService.deleteCategory(id)
+  @Mutation(() => String)
+  async deleteGradingCategory (@Arg('id') id: string): Promise<String> {
+    await mqPublish('category.delete', { id })
+    return 'Category deletion sent to queue'
   }
 
   @Query(() => [Grade])
@@ -50,25 +54,28 @@ export class GradingResolver {
     return await gradingService.getGradeById(id)
   }
 
-  @Mutation(() => Grade)
+  @Mutation(() => String)
   async createGrade (
     @Arg('score') score: number,
       @Arg('category_id') categoryId: string,
-      @Arg('student_id') studentId: string): Promise<Grade> {
-    return await gradingService.createGrade({ score, category_id: categoryId, student_id: studentId })
+      @Arg('student_id') studentId: string): Promise<String> {
+    await mqPublish('grade.create', { score, category_id: categoryId, student_id: studentId })
+    return 'Grade creation sent to queue'
   }
 
-  @Mutation(() => Grade)
+  @Mutation(() => String)
   async updateGrade (
     @Arg('id') id: string,
       @Arg('score') score: number,
       @Arg('category_id') categoryId: string,
-      @Arg('student_id') studentId: string): Promise<Grade> {
-    return await gradingService.updateGrade({ score, category_id: categoryId, student_id: studentId }, id)
+      @Arg('student_id') studentId: string): Promise<String> {
+    await mqPublish('grade.update', { id, score, category_id: categoryId, student_id: studentId })
+    return 'Grade update sent to queue'
   }
 
-  @Mutation(() => Grade)
-  async deleteGrade (@Arg('id') id: string): Promise<Grade> {
-    return await gradingService.deleteGrade(id)
+  @Mutation(() => String)
+  async deleteGrade (@Arg('id') id: string): Promise<String> {
+    await mqPublish('grade.delete', { id })
+    return 'Grade deletion sent to queue'
   }
 }
