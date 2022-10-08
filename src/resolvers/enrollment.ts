@@ -4,30 +4,30 @@ import { Enrollment, EnrollmentInput } from '@/schemas/enrollment'
 
 @Resolver()
 export class EnrollmentResolver {
-  // enrollmentsList: Enrollment[] = []
-
   @Query(() => [Enrollment])
   async getEnrollments (@Arg('input') input: EnrollmentInput): Promise<Enrollment[]> {
     const userId = input.user
     const groupId = input.group
     const subjectId = input.subject
     const semester = input.semester
+
     if (userId != null && groupId == null && subjectId == null && semester == null) {
       return await enrollmentService.getEnrollmentsByUser(userId)
-    } else if (userId == null && groupId != null && subjectId == null && semester == null) {
-      return await enrollmentService.getEnrollmentsByGroup(groupId)
     } else if (userId == null && groupId == null && subjectId != null && semester == null) {
       return await enrollmentService.getEnrollmentsBySubject(subjectId)
     } else if (userId == null && groupId == null && subjectId == null && semester != null) {
       return await enrollmentService.getEnrollmentsBySemester(semester)
-    } else if (userId == null && groupId == null && subjectId != null && semester != null) {
-      return await enrollmentService.getEnrollmentsBySubjectAndSemester(subjectId, semester)
     } else if (userId != null && groupId == null && subjectId == null && semester != null) {
       return await enrollmentService.getEnrollmentsByUserAndSemester(userId, semester)
+    } else if (userId == null && groupId == null && subjectId != null && semester != null) {
+      return await enrollmentService.getEnrollmentsBySubjectAndSemester(subjectId, semester)
+    } else if (userId == null && groupId != null && subjectId != null && semester == null) {
+      return await enrollmentService.getEnrollmentsBySubjectAndGroup(subjectId, groupId)
+    } else if (userId != null && groupId == null && subjectId != null && semester == null) {
+      return await enrollmentService.getEnrollmentsByUserAndSubject(userId, subjectId)
     } else {
       return await enrollmentService.getAllEnrollments()
     }
-    // return this.enrollmentsList
   }
 
   @Query(() => Enrollment)
