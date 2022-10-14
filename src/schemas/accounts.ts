@@ -20,12 +20,3 @@ export class User {
   @Field({ nullable: true })
   createdAt?: string
 }
-
-@ObjectType()
-export class Session {
-  @Field()
-  token!: string
-
-  @Field()
-  user!: User
-}
