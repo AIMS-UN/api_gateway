@@ -2,12 +2,15 @@ import 'module-alias/register'
 import 'reflect-metadata'
 
 import express from 'express'
-import morgan from 'morgan'
-import { startServer } from './app'
+import session from 'express-session'
 
-import { PORT, HOST, NODE_ENV, LOG_LEVEL } from '@/configs/index'
-
+import { PORT, HOST, NODE_ENV } from '@/configs/index'
 import { loadConsumers } from '@/mq/consumers'
+import { startServer } from '@/app'
+
+declare module 'express-session' {
+  interface Session { token: string | undefined }
+}
 
 loadConsumers().then(() => {
   console.log('MQ consumers loaded')
@@ -17,13 +20,20 @@ loadConsumers().then(() => {
 
 const app = express()
 
-// Setup logging
-app.use(morgan(LOG_LEVEL))
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: false
+}))
 
 // Setup graphql
 startServer()
   .then(server => {
-    server.applyMiddleware({ app, path: '/graphql' })
+    server.applyMiddleware({
+      app,
+      path: '/graphql',
+      cors: { credentials: true, origin: 'https://studio.apollographql.com' }
+    })
 
     app.listen(PORT, () => {
       console.log(`Server running on ${NODE_ENV} mode at http://${HOST}:${PORT}/graphql`)
