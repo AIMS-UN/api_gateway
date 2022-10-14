@@ -41,7 +41,10 @@ export const logoutUser = async (session: Session): Promise<boolean> => {
   return await new Promise((resolve) => { resolve(true) })
 }
 
-export const authChecker: AuthChecker<ExpressContext> = async ({ context: { req, res } }) => {
+export const authChecker: AuthChecker<ExpressContext> = async (
+  { context: { req, res } },
+  roles
+) => {
   if (req.session.token == null) return false
   const { data } = await accountMS.get('/accounts', {
     headers: { Authorization: req.session.token }
@@ -49,5 +52,9 @@ export const authChecker: AuthChecker<ExpressContext> = async ({ context: { req,
 
   res.locals.user = data.data
 
-  return true
+  if (roles.length === 0) { return true }
+
+  if (roles.includes(data.data.role)) { return true }
+
+  return false
 }
