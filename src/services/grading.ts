@@ -51,13 +51,13 @@ export const deleteGrade = async (id: string): Promise<Grade> => {
   return await new Promise((resolve) => { resolve(data.data) })
 }
 
-export const getGradeById = async (id: string): Promise<Grade> => {
+export const getGrade = async (id: string): Promise<Grade> => {
   const { data } = await gradingInstance.get(`/grades/${id}`)
 
   return await new Promise((resolve) => { resolve(data.data) })
 }
 
-export const getCategoryById = async (id: string): Promise<Category> => {
+export const getCategory = async (id: string): Promise<Category> => {
   const { data } = await gradingInstance.get(`/categories/${id}`)
 
   return await new Promise((resolve) => { resolve(data.data) })

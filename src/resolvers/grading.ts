@@ -14,7 +14,7 @@ export class GradingResolver {
 
   @Query(() => Category)
   async getGradingCategory (@Arg('id') id: string): Promise<Category> {
-    return await gradingService.getCategoryById(id)
+    return await gradingService.getCategory(id)
   }
 
   @Mutation(() => String)
@@ -50,8 +50,8 @@ export class GradingResolver {
   }
 
   @Query(() => Grade)
-  async getGradeById (@Arg('id') id: string): Promise<Grade> {
-    return await gradingService.getGradeById(id)
+  async getGrade (@Arg('id') id: string): Promise<Grade> {
+    return await gradingService.getGrade(id)
   }
 
   @Mutation(() => String)
