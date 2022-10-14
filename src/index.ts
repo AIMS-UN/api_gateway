@@ -23,8 +23,11 @@ const app = express()
 app.use(session({
   secret: 'secret',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: { secure: true, sameSite: 'none', maxAge: 2 * 60 * 60 * 1000 }
 }))
+
+app.set('trust proxy', 1)
 
 // Setup graphql
 startServer()
