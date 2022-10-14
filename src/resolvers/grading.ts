@@ -6,10 +6,11 @@ import { publish as mqPublish } from '@/mq/publisher'
 @Resolver()
 export class GradingResolver {
   @Query(() => [Category])
-  async getGradingCategories (): Promise<Category[]> {
-    const a = await gradingService.getCategories()
-    console.log(a)
-    return a
+  async getGradingCategories (
+    @Arg('group_id', { nullable: true }) groupId?: string,
+      @Arg('subject_id', { nullable: true }) subjectId?: string
+  ): Promise<Category[]> {
+    return await gradingService.getCategories({ groupId, subjectId })
   }
 
   @Query(() => Category)
@@ -36,8 +37,11 @@ export class GradingResolver {
   }
 
   @Query(() => [Grade])
-  async getGrades (): Promise<Grade[]> {
-    return await gradingService.getGrades()
+  async getGrades (
+    @Arg('category_id', { nullable: true }) categoryId?: string,
+      @Arg('student_id', { nullable: true }) studentId?: string
+  ): Promise<Grade[]> {
+    return await gradingService.getGrades({ categoryId, studentId })
   }
 
   @Query(() => Grade)
