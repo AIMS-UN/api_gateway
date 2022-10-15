@@ -113,15 +113,33 @@ export const updateUser = async (
   session: Session
 ): Promise<User> => {
   const { data } = await accountMS.put('/accounts', {
-    headers: {
-      Authorization: session.token
-    },
-    data: {
-      // Aquí coloco los datos a actualizar
-      username,
-      password,
-      role
-    }
+    // Aquí coloco los datos a actualizar
+    username,
+    password,
+    role
+  }, {
+    headers: { Authorization: session.token }
+  })
+
+  return await new Promise((resolve) => {
+    resolve(data.data)
+  })
+}
+
+/**
+ * Obtener algún usuario con su ID
+ *
+ * @param {string} id
+ * @param {Session} session
+ *
+ * @returns {User} user
+ */
+export const getUserByID = async (
+  id: string,
+  session: Session
+): Promise<User> => {
+  const { data } = await accountMS.get(`/accounts/${id}`, {
+    headers: { Authorization: session.token }
   })
 
   return await new Promise((resolve) => {
