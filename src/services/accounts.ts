@@ -7,18 +7,36 @@ import { getInstance } from '@/configs/axios'
 
 const accountMS = getInstance('account')
 
-export const loginUser = async (
-  username: string,
-  password: string,
-  session: Session
-): Promise<User> => {
+/**
+ * Aquí está la función para iniciar sesión
+ *
+ * @param {string} username
+ * @param {string} password
+ * @param {Session} session
+ *
+ * @returns {User} user
+ */
+
+export const loginUser = async (username: string, password: string, session: Session): Promise<User> => {
   const { data } = await accountMS.post('/auth/login', { username, password })
 
   session.token = data.token
 
-  return await new Promise((resolve) => { resolve(data.data) })
+  return await new Promise((resolve) => {
+    resolve(data.data)
+  })
 }
 
+/**
+ * Aquí es la función de servicio para registar a los usuarios
+ *
+ * @param {string} username
+ * @param {string} password
+ * @param {string} role
+ * @param {Session} session
+ *
+ * @return {User} user
+ */
 export const registerUser = async (
   username: string,
   password: string,
@@ -33,28 +51,98 @@ export const registerUser = async (
 
   session.token = data.token
 
-  return await new Promise((resolve) => { resolve(data.data) })
+  return await new Promise((resolve) => {
+    resolve(data.data)
+  })
 }
 
+/**
+ * Esta es la función para colocar el token como nulo para cerrar la sesión.
+ *
+ * @param {Session} session
+ *
+ * @returns {boolean} true
+ */
 export const logoutUser = async (session: Session): Promise<boolean> => {
   session.token = undefined
-  return await new Promise((resolve) => { resolve(true) })
+  return await new Promise((resolve) => {
+    resolve(true)
+  })
 }
 
-export const authChecker: AuthChecker<ExpressContext> = async (
-  { context: { req, res } },
-  roles
-) => {
+/**
+ * La función que revisa el token de autenticación
+ *
+ * @param roles
+ *
+ * @returns
+ */
+export const authChecker: AuthChecker<ExpressContext> = async ({ context: { req, res } }, roles) => {
   if (req.session.token == null) return false
+
   const { data } = await accountMS.get('/accounts', {
     headers: { Authorization: req.session.token }
   })
 
   res.locals.user = data.data
 
-  if (roles.length === 0) { return true }
+  if (roles.length === 0) {
+    return true
+  }
 
-  if (roles.includes(data.data.role)) { return true }
+  if (roles.includes(data.data.role)) {
+    return true
+  }
 
   return false
+}
+
+/**
+ * Aquí es la función para actualizar los datos de usuario
+ *
+ * @param {string} username
+ * @param {string} password
+ * @param {string} role
+ *
+ * @returns {User} user
+ */
+export const updateUser = async (
+  username: string,
+  password: string,
+  role: string,
+  session: Session
+): Promise<User> => {
+  const { data } = await accountMS.put('/accounts', {
+    // Aquí coloco los datos a actualizar
+    username,
+    password,
+    role
+  }, {
+    headers: { Authorization: session.token }
+  })
+
+  return await new Promise((resolve) => {
+    resolve(data.data)
+  })
+}
+
+/**
+ * Obtener algún usuario con su ID
+ *
+ * @param {string} id
+ * @param {Session} session
+ *
+ * @returns {User} user
+ */
+export const getUserByID = async (
+  id: string,
+  session: Session
+): Promise<User> => {
+  const { data } = await accountMS.get(`/accounts/${id}`, {
+    headers: { Authorization: session.token }
+  })
+
+  return await new Promise((resolve) => {
+    resolve(data.data)
+  })
 }
