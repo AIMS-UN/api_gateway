@@ -1,15 +1,15 @@
+// Importamos cositas del GraphQL
 import { ID, Field, ObjectType } from 'type-graphql'
 
+// Hacemos el objeto de Usuario
+// Tiene las variables que queremos de los request
 @ObjectType()
 export class User {
   @Field(_type => ID)
-  id!: number
+  id!: string
 
   @Field()
   username!: string
-
-  @Field()
-  password!: string
 
   @Field()
   role!: string
