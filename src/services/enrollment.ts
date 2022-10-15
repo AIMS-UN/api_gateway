@@ -3,48 +3,19 @@ import { Enrollment, EnrollmentInput } from '@/schemas/enrollment'
 
 const enrollmentMS = getInstance('enrollments')
 
-export const getAllEnrollments = async (): Promise<Enrollment[]> => {
-  const { data } = await enrollmentMS.get('/enrollments/')
-  console.log(JSON.stringify(data))
+export const getAllEnrollmentsByFilter = async (user?: string, subject?: string, group?: string, semester?: string): Promise<Enrollment[]> => {
+  let url = '/enrollments?'
+
+  if (user != null) { url += `user=${user}&` }
+  if (subject != null) { url += `subject=${subject}&` }
+  if (group != null) { url += `group=${group}&` }
+  if (semester != null) { url += `semester=${semester}&` }
+
+  const { data } = await enrollmentMS.get(url)
   return await new Promise((resolve) => { resolve(data) })
 }
 
-export const getEnrollmentsByUser = async (user: string): Promise<Enrollment[]> => {
-  const { data } = await enrollmentMS.get(`/enrollments?user=${user}`)
-  return await new Promise((resolve) => { resolve(data) })
-}
-
-export const getEnrollmentsBySubject = async (subject: string): Promise<Enrollment[]> => {
-  const { data } = await enrollmentMS.get(`/enrollments?subject=${subject}`)
-  return await new Promise((resolve) => { resolve(data) })
-}
-
-export const getEnrollmentsBySemester = async (semester: string): Promise<Enrollment[]> => {
-  const { data } = await enrollmentMS.get(`/enrollments?semester=${semester}`)
-  return await new Promise((resolve) => { resolve(data) })
-}
-
-export const getEnrollmentsBySubjectAndSemester = async (subject: string, semester: string): Promise<Enrollment[]> => {
-  const { data } = await enrollmentMS.get(`/enrollments?subject=${subject}&semester=${semester}`)
-  return await new Promise((resolve) => { resolve(data) })
-}
-
-export const getEnrollmentsByUserAndSemester = async (user: string, semester: string): Promise<Enrollment[]> => {
-  const { data } = await enrollmentMS.get(`/enrollments?user=${user}&semester=${semester}`)
-  return await new Promise((resolve) => { resolve(data) })
-}
-
-export const getEnrollmentsBySubjectAndGroup = async (subject: string, group: string): Promise<Enrollment[]> => {
-  const { data } = await enrollmentMS.get(`/enrollments?subject=${subject}&group=${group}`)
-  return await new Promise((resolve) => { resolve(data) })
-}
-
-export const getEnrollmentsByUserAndSubject = async (user: string, subject: string): Promise<Enrollment[]> => {
-  const { data } = await enrollmentMS.get(`/enrollments?user=${user}&subject=${subject}`)
-  return await new Promise((resolve) => { resolve(data) })
-}
-
-export const getEnrollment = async (id: number): Promise<Enrollment> => {
+export const getEnrollmentById = async (id: number): Promise<Enrollment> => {
   const { data } = await enrollmentMS.get(`/enrollments/${id}`)
   return await new Promise((resolve) => { resolve(data) })
 }
