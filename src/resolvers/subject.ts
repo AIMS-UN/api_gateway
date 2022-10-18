@@ -1,4 +1,4 @@
-import { Subject } from '@/schemas/subject'
+import { ClassGroups, Subject } from '@/schemas/subject'
 import * as subjectService from '@/services/subject'
 import { Arg, Query, Resolver } from 'type-graphql'
 
@@ -21,5 +21,10 @@ export class SubjectResolver {
   @Query(() => [Subject])
   async getSubjectbyCareer (@Arg('career') career: number): Promise<Subject[]> {
     return await subjectService.getSubjectbyCareer(career)
+  }
+
+  @Query(() => ClassGroups)
+  async getGroupById (@Arg('classGroupId') classGroupId: string): Promise<ClassGroups> {
+    return await subjectService.getGroupById(classGroupId)
   }
 }
