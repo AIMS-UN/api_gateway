@@ -3,7 +3,7 @@ import { PingResolver } from './ping'
 import { AccountResolver } from './accounts'
 import { EnrollmentResolver } from './enrollment'
 import { GradingResolver } from './grading'
-import { ScheduleResolver } from './schedule'
+// import { ScheduleResolver } from './schedule'
 import { SubjectResolver } from './subject'
 import { ProfileResolver } from './profile'
 
@@ -13,6 +13,6 @@ export const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> = [
   EnrollmentResolver,
   GradingResolver,
   ProfileResolver,
-  ScheduleResolver,
+  // ScheduleResolver,
   SubjectResolver
 ]
