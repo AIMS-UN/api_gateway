@@ -8,9 +8,9 @@ export class GradingResolver {
   @Query(() => [Category])
   async getGradingCategories (
     @Arg('group_id', { nullable: true }) groupId?: string,
-      @Arg('subject_id', { nullable: true }) subjectId?: string
+      @Arg('subject_code', { nullable: true }) subjectCode?: string
   ): Promise<Category[]> {
-    return await gradingService.getCategories({ groupId, subjectId })
+    return await gradingService.getCategories({ groupId, subjectCode })
   }
 
   @Query(() => Category)

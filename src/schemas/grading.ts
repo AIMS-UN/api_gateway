@@ -15,7 +15,7 @@ export class Category {
   group_id!: string
 
   @Field()
-  subject_id!: string
+  subject_code!: string
 }
 
 @InputType()
@@ -30,7 +30,7 @@ export class CategoryInput {
   group_id!: string
 
   @Field()
-  subject_id!: string
+  subject_code!: string
 }
 
 @ObjectType()

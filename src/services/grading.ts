@@ -16,12 +16,12 @@ export const createGrade = async (grade: GradeInput): Promise<Grade> => {
 }
 
 export const getCategories = async (
-  { groupId, subjectId }: { groupId?: string, subjectId?: string } = {}
+  { groupId, subjectCode }: { groupId?: string, subjectCode?: string } = {}
 ): Promise<Category[]> => {
   let url = '/categories?'
 
   if (groupId != null) { url += `group_id=${groupId}&` }
-  if (subjectId != null) { url += `subject_id=${subjectId}&` }
+  if (subjectCode != null) { url += `subject_code=${subjectCode}&` }
 
   const { data } = await gradingInstance.get(url)
 

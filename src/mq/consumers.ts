@@ -28,13 +28,13 @@ export const loadConsumers = async (): Promise<void> => {
   await new Promise(resolve => setTimeout(resolve, 15000))
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   consumer('category.create', async (message) => {
-    const { name, weight, group_id: groupId, subject_id: subjectId } = JSON.parse(message.content.toString())
-    await GradingService.createCategory({ name, weight, group_id: groupId, subject_id: subjectId }).catch(console.error)
+    const { name, weight, group_id: groupId, subject_code: subjectCode } = JSON.parse(message.content.toString())
+    await GradingService.createCategory({ name, weight, group_id: groupId, subject_code: subjectCode }).catch(console.error)
   })
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   consumer('category.update', async (message) => {
-    const { id, name, weight, group_id: groupId, subject_id: subjectId } = JSON.parse(message.content.toString())
-    await GradingService.updateCategory({ name, weight, group_id: groupId, subject_id: subjectId }, id).catch(console.error)
+    const { id, name, weight, group_id: groupId, subject_code: subjectCode } = JSON.parse(message.content.toString())
+    await GradingService.updateCategory({ name, weight, group_id: groupId, subject_code: subjectCode }, id).catch(console.error)
   })
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   consumer('category.delete', async (message) => {
