@@ -6,16 +6,12 @@ import { Arg, Query, Resolver } from 'type-graphql'
 export class SubjectResolver {
   @Query(() => [Subject])
   async getSubjectbyName (@Arg('name') name: string): Promise<Subject[]> {
-    const a = await subjectService.getSubjectbyName(name)
-    console.log(a)
-    return a
+    return await subjectService.getSubjectbyName(name)
   }
 
   @Query(() => [Subject])
   async getSubjectbyCode (@Arg('code') code: number): Promise<Subject[]> {
-    const a = await subjectService.getSubjectbyCode(code)
-    console.log(a)
-    return a
+    return await subjectService.getSubjectbyCode(code)
   }
 
   @Query(() => [Subject])

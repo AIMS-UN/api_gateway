@@ -12,13 +12,13 @@ export class Subject {
   curriculum?: string
 
   @Field()
-  credits?: number
+  credits!: number
 
   @Field()
-  code?: number
+  code!: number
 
   @Field()
-  career?: number
+  career!: number
 }
 
 @ObjectType()
@@ -30,5 +30,5 @@ export class ClassGroups {
   max_capacity!: number
 
   @Field()
-  teacher_id !: number
+  teacher_id!: string
 }

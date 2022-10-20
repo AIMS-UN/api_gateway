@@ -6,8 +6,6 @@ const subjectInstance = getInstance('subject')
 
 export const getSubjectbyName = async (name: string): Promise<Subject[]> => {
   const { data } = await subjectInstance.get(`/subjects?name=${name}`)
-  console.log(data)
-
   return await new Promise((resolve) => { resolve(data) })
 }
 
@@ -22,6 +20,5 @@ export const getSubjectbyCareer = async (career: number): Promise<Subject[]> => 
 }
 export const getGroupById = async (classGroupId: string): Promise<ClassGroups> => {
   const { data } = await subjectInstance.get(`/group/${classGroupId}`)
-  console.log(data)
   return await new Promise((resolve) => { resolve(data) })
 }
