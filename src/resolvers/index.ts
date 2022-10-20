@@ -5,6 +5,8 @@ import { EnrollmentResolver } from './enrollment'
 import { GradingResolver } from './grading'
 import { ScheduleResolver } from './schedule'
 import { SubjectResolver } from './subject'
+import { CollegeResolver } from './college'
+
 import { ProfileResolver } from './profile'
 
 export const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> = [
@@ -14,5 +16,6 @@ export const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> = [
   GradingResolver,
   ProfileResolver,
   ScheduleResolver,
-  SubjectResolver
+  SubjectResolver,
+  CollegeResolver
 ]
