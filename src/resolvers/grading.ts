@@ -1,7 +1,8 @@
-import { Category, CategoryInput, Grade, GradeInput } from '@/schemas/grading'
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
+import { ExpressContext } from 'apollo-server-express'
+
 import * as gradingService from '@/services/grading'
-import { Arg, Authorized, Mutation, Query, Resolver } from 'type-graphql'
-import { publish as mqPublish } from '@/mq/publisher'
+import { Category, CategoryInput, Grade, GradeInput } from '@/schemas/grading'
 
 @Resolver()
 export class GradingResolver {
@@ -20,23 +21,25 @@ export class GradingResolver {
 
   @Authorized('teacher')
   @Mutation(() => String)
-  async createGradingCategory (@Arg('category_input') categoryInput: CategoryInput): Promise<String> {
-    await mqPublish('category.create', categoryInput)
-    return 'Category creation sent to queue'
+  async createGradingCategory (
+    @Arg('category_input') categoryInput: CategoryInput
+  ): Promise<String> {
+    return await gradingService.createCategory(categoryInput)
   }
 
   @Authorized('teacher')
   @Mutation(() => String)
-  async updateGradingCategory (@Arg('id') id: string, @Arg('category_input') categoryInput: CategoryInput): Promise<String> {
-    await mqPublish('category.update', { id, ...categoryInput })
-    return 'Category update sent to queue'
+  async updateGradingCategory (
+    @Arg('id') id: string,
+      @Arg('category_input') categoryInput: CategoryInput
+  ): Promise<String> {
+    return await gradingService.updateCategory(id, categoryInput)
   }
 
   @Authorized('teacher')
   @Mutation(() => String)
   async deleteGradingCategory (@Arg('id') id: string): Promise<String> {
-    await mqPublish('category.delete', { id })
-    return 'Category deletion sent to queue'
+    return await gradingService.deleteCategory(id)
   }
 
   @Query(() => [Grade])
@@ -54,22 +57,28 @@ export class GradingResolver {
 
   @Authorized('teacher')
   @Mutation(() => String)
-  async createGrade (@Arg('grade_input') gradeInput: GradeInput): Promise<String> {
-    await mqPublish('grade.create', gradeInput)
-    return 'Grade creation sent to queue'
+  async createGrade (
+    @Arg('grade_input') gradeInput: GradeInput,
+      @Ctx() context: ExpressContext
+  ): Promise<String> {
+    const session = context.req.session
+    return await gradingService.createGrade(gradeInput, session)
   }
 
   @Authorized('teacher')
   @Mutation(() => String)
-  async updateGrade (@Arg('id') id: string, @Arg('grade_input') gradeInput: GradeInput): Promise<String> {
-    await mqPublish('grade.update', { id, ...gradeInput })
-    return 'Grade update sent to queue'
+  async updateGrade (
+    @Arg('id') id: string,
+      @Arg('grade_input') gradeInput: GradeInput,
+      @Ctx() context: ExpressContext
+  ): Promise<String> {
+    const session = context.req.session
+    return await gradingService.updateGrade(id, gradeInput, session)
   }
 
   @Authorized('teacher')
   @Mutation(() => String)
   async deleteGrade (@Arg('id') id: string): Promise<String> {
-    await mqPublish('grade.delete', { id })
-    return 'Grade deletion sent to queue'
+    return await gradingService.deleteGrade(id)
   }
 }
