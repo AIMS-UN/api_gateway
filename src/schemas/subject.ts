@@ -15,7 +15,7 @@ export class Subject {
   credits!: number
 
   @Field()
-  code!: number
+  code!: string
 
   @Field()
   career!: number
