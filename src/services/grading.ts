@@ -36,8 +36,7 @@ export const createCategory = async (category: CategoryInput): Promise<String> =
     return 'Group does not exist'
   }
 
-  // TODO: fix parse int
-  const subject = await subjectService.getSubjectbyCode(parseInt(subjectCode))
+  const subject = await subjectService.getSubjectbyCode(subjectCode)
   if (subject == null) {
     console.error(`Subject with code ${subjectCode} does not exist`)
     return 'Subject does not exist'
@@ -59,8 +58,7 @@ export const updateCategory = async (
     return 'Group does not exist'
   }
 
-  // TODO: fix parse int
-  const subject = await subjectService.getSubjectbyCode(parseInt(subjectCode))
+  const subject = await subjectService.getSubjectbyCode(subjectCode)
   if (subject == null) {
     console.error(`Subject with code ${subjectCode} does not exist`)
     return 'Subject does not exist'

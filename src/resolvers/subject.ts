@@ -10,7 +10,7 @@ export class SubjectResolver {
   }
 
   @Query(() => [Subject])
-  async getSubjectbyCode (@Arg('code') code: number): Promise<Subject[]> {
+  async getSubjectbyCode (@Arg('code') code: string): Promise<Subject[]> {
     return await subjectService.getSubjectbyCode(code)
   }
 

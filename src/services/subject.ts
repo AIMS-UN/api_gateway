@@ -9,7 +9,7 @@ export const getSubjectbyName = async (name: string): Promise<Subject[]> => {
   return await new Promise((resolve) => { resolve(data) })
 }
 
-export const getSubjectbyCode = async (code: number): Promise<Subject[]> => {
+export const getSubjectbyCode = async (code: string): Promise<Subject[]> => {
   const { data } = await subjectInstance.get(`/subjects?code=${code}`)
   return await new Promise((resolve) => { resolve(data) })
 }
