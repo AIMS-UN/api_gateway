@@ -22,7 +22,7 @@ export class GradingResolver {
   @Authorized('teacher')
   @Mutation(() => String)
   async createGradingCategory (
-    @Arg('category_input') categoryInput: CategoryInput
+    @Arg('categoryInput') categoryInput: CategoryInput
   ): Promise<String> {
     return await gradingService.createCategory(categoryInput)
   }
@@ -31,7 +31,7 @@ export class GradingResolver {
   @Mutation(() => String)
   async updateGradingCategory (
     @Arg('id') id: string,
-      @Arg('category_input') categoryInput: CategoryInput
+      @Arg('categoryInput') categoryInput: CategoryInput
   ): Promise<String> {
     return await gradingService.updateCategory(id, categoryInput)
   }
@@ -58,7 +58,7 @@ export class GradingResolver {
   @Authorized('teacher')
   @Mutation(() => String)
   async createGrade (
-    @Arg('grade_input') gradeInput: GradeInput,
+    @Arg('gradeInput') gradeInput: GradeInput,
       @Ctx() context: ExpressContext
   ): Promise<String> {
     const session = context.req.session
@@ -69,7 +69,7 @@ export class GradingResolver {
   @Mutation(() => String)
   async updateGrade (
     @Arg('id') id: string,
-      @Arg('grade_input') gradeInput: GradeInput,
+      @Arg('gradeInput') gradeInput: GradeInput,
       @Ctx() context: ExpressContext
   ): Promise<String> {
     const session = context.req.session

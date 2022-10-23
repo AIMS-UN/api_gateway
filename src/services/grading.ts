@@ -11,46 +11,41 @@ const gradingInstance = getInstance('grading')
 export const getCategories = async (
   { groupId, subjectCode }: { groupId?: string, subjectCode?: string } = {}
 ): Promise<Category[]> => {
-  let url = '/categories?'
+  const params = { group_id: groupId, subject_code: subjectCode }
 
-  if (groupId != null) { url += `group_id=${groupId}&` }
-  if (subjectCode != null) { url += `subject_code=${subjectCode}&` }
+  const { data: { data } } = await gradingInstance.get('/categories', { params })
 
-  const { data } = await gradingInstance.get(url)
-
-  return await new Promise((resolve) => { resolve(data.data) })
+  return data
 }
 
 export const getCategory = async (id: string): Promise<Category> => {
-  const { data } = await gradingInstance.get(`/categories/${id}`)
+  const { data: { data } } = await gradingInstance.get(`/categories/${id}`)
 
-  return await new Promise((resolve) => { resolve(data.data) })
+  return data
 }
 
 export const createCategory = async (category: CategoryInput): Promise<String> => {
-  const { group_id: groupId, subject_code: subjectCode } = category
+  const { group_id: groupId } = category
 
   const group = await subjectService.getGroupById(groupId)
   if (group == null) {
     console.error(`Group with id ${groupId} does not exist`)
+
     return 'Group does not exist'
   }
 
-  const subject = await subjectService.getSubjectbyCode(subjectCode)
-  if (subject == null) {
-    console.error(`Subject with code ${subjectCode} does not exist`)
-    return 'Subject does not exist'
-  }
+  const { subjectCode } = group.subject
 
-  await mqPublish('category.create', category)
-  return await new Promise((resolve) => { resolve('Category update sent to queue') })
+  const message = { ...category, subject_code: subjectCode }
+  await mqPublish('category.create', message)
+  return 'Category created'
 }
 
 export const updateCategory = async (
   categoryId: string,
   category: CategoryInput
 ): Promise<String> => {
-  const { group_id: groupId, subject_code: subjectCode } = category
+  const { group_id: groupId } = category
 
   const group = await subjectService.getGroupById(groupId)
   if (group == null) {
@@ -58,50 +53,47 @@ export const updateCategory = async (
     return 'Group does not exist'
   }
 
-  const subject = await subjectService.getSubjectbyCode(subjectCode)
-  if (subject == null) {
-    console.error(`Subject with code ${subjectCode} does not exist`)
-    return 'Subject does not exist'
-  }
+  const { subjectCode } = group.subject
 
   const categoryCheck = await getCategory(categoryId)
+
   if (categoryCheck == null) {
     console.error(`Category with id ${categoryId} does not exist`)
     return 'Category does not exist'
   }
 
-  await mqPublish('category.update', { id: categoryId, ...category })
-  return await new Promise((resolve) => { resolve('Category update sent to queue') })
+  const message = { id: categoryId, ...category, subject_code: subjectCode }
+  await mqPublish('category.update', message)
+  return 'Category updated'
 }
 
 export const deleteCategory = async (id: string): Promise<String> => {
   const category = await getCategory(id)
+
   if (category == null) {
     console.error(`Category with id ${id} does not exist`)
     return 'Category does not exist'
   }
 
-  await mqPublish('category.delete', id)
-  return await new Promise((resolve) => { resolve('Category deletion sent to queue') })
+  const message = { id }
+  await mqPublish('category.delete', message)
+  return 'Category deleted'
 }
 
 export const getGrades = async (
   { categoryId, studentId }: { categoryId?: string, studentId?: string } = {}
 ): Promise<Grade[]> => {
-  let url = '/grades?'
+  const params = { category_id: categoryId, student_id: studentId }
 
-  if (categoryId != null) { url += `category_id=${categoryId}&` }
-  if (studentId != null) { url += `student_id=${studentId}&` }
+  const { data: { data } } = await gradingInstance.get('/grades', { params })
 
-  const { data } = await gradingInstance.get(url)
-
-  return await new Promise((resolve) => { resolve(data.data) })
+  return data
 }
 
 export const getGrade = async (id: string): Promise<Grade> => {
-  const { data } = await gradingInstance.get(`/grades/${id}`)
+  const { data: { data } } = await gradingInstance.get(`/grades/${id}`)
 
-  return await new Promise((resolve) => { resolve(data.data) })
+  return data
 }
 
 export const createGrade = async (grade: GradeInput, session: Session): Promise<String> => {
@@ -119,8 +111,9 @@ export const createGrade = async (grade: GradeInput, session: Session): Promise<
     return 'Student does not exist'
   }
 
-  await mqPublish('grade.create', grade)
-  return await new Promise((resolve) => { resolve('Grade creation sent to queue') })
+  const message = { ...grade }
+  await mqPublish('grade.create', message)
+  return 'Grade created'
 }
 
 export const updateGrade = async (
@@ -148,17 +141,20 @@ export const updateGrade = async (
     return 'Grade does not exist'
   }
 
-  await mqPublish('grade.update', { id: gradeId, ...grade })
-  return await new Promise((resolve) => { resolve('Grade update sent to queue') })
+  const message = { id: gradeId, ...grade }
+  await mqPublish('grade.update', message)
+  return 'Grade updated'
 }
 
 export const deleteGrade = async (id: string): Promise<String> => {
   const grade = await getGrade(id)
+
   if (grade == null) {
     console.error(`Grade with id ${id} does not exist`)
     return 'Grade does not exist'
   }
 
-  await mqPublish('grade.delete', id)
-  return await new Promise((resolve) => { resolve('Grade deletion sent to queue') })
+  const message = { id }
+  await mqPublish('grade.delete', message)
+  return 'Grade deleted'
 }

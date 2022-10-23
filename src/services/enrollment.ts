@@ -11,33 +11,59 @@ export const getAllEnrollmentsByFilter = async (user?: string, subject?: string,
   if (group != null) { url += `group=${group}&` }
   if (semester != null) { url += `semester=${semester}&` }
 
-  console.log('getAllEnrollmentsByFilter Called')
+  console.log('Calling getAllEnrollmentsByFilter with url: ' + url)
+
   const { data } = await enrollmentMS.get(url)
-  console.log(data)
-  return await new Promise((resolve) => { resolve(data) })
+
+  // const params = { user, subject, group, semester }
+
+  // const { data } = await enrollmentMS.get('/enrollments', { params })
+
+  console.log('getAllEnrollmentsByFilter result: ' + JSON.stringify(data))
+
+  return data
 }
 
 export const getEnrollmentById = async (id: string): Promise<Enrollment> => {
   const { data } = await enrollmentMS.get(`/enrollments/${id}`)
-  return await new Promise((resolve) => { resolve(data) })
+
+  return data
 }
 
-export const createEnrollment = async (user: string, subject: string, group: string, semester: string): Promise<Enrollment> => {
-  console.log('createEnrollment Called')
-  const { data } = await enrollmentMS.post('/enrollments', { user, subject, group, semester, null: null })
-  console.log(data)
-  return await new Promise((resolve) => { resolve(data) })
+export const createEnrollment = async (
+  user: string,
+  subject: string,
+  group: string,
+  semester: string
+): Promise<Enrollment> => {
+  const body = { user, subject, group, semester }
+  const { data } = await enrollmentMS.post('/enrollments', body)
+
+  return data
 }
 
-export const cancelEnrollment = async (user: string, subject: string, semester: string): Promise<Enrollment> => {
-  if (user == null || subject == null || semester == null) {
-    return null as any
-  }
-  const { data } = await enrollmentMS.delete(`/enrollments?user=${user}&subject=${subject}&semester=${semester}`)
-  return await new Promise((resolve) => { resolve(data) })
+export const cancelEnrollment = async (
+  user: string,
+  subject: string,
+  semester: string
+): Promise<Enrollment> => {
+  const params = { user, subject, semester }
+
+  const { data } = await enrollmentMS.delete('/enrollments', { params })
+
+  return data
 }
 
-export const updateFinalGrade = async (user: string, subject: string, group: string, semester: string, finalGrade: number): Promise<Enrollment> => {
-  const { data } = await enrollmentMS.put('/enrollments/grade', { user, subject, group, semester, finalGrade })
-  return await new Promise((resolve) => { resolve(data) })
+export const updateFinalGrade = async (
+  user: string,
+  subject: string,
+  group: string,
+  semester: string,
+  finalGrade: number
+): Promise<Enrollment> => {
+  const body = { user, subject, group, semester, finalGrade }
+
+  const { data } = await enrollmentMS.put('/enrollments/grade', body)
+
+  return data
 }

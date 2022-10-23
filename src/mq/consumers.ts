@@ -1,6 +1,6 @@
 import amqplib from 'amqplib'
 
-import { Category, CategoryInput, Grade, GradeInput } from '@/schemas/grading'
+import { Category, Grade, GradeInput } from '@/schemas/grading'
 import { getInstance } from '@/configs/axios'
 
 const gradingInstance = getInstance('grading')
@@ -33,7 +33,7 @@ export const loadConsumers = async (): Promise<void> => {
 
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   consumer('category.create', async (message) => {
-    const category = JSON.parse(message.content.toString()) as CategoryInput
+    const category = JSON.parse(message.content.toString())
     const { data } = await gradingInstance.post('/categories', category)
     if (data == null) console.error('Failed to create category')
   })
@@ -47,7 +47,7 @@ export const loadConsumers = async (): Promise<void> => {
 
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   consumer('category.delete', async (message) => {
-    const id = JSON.parse(message.content.toString()) as string
+    const { id } = JSON.parse(message.content.toString()) as { id: string }
     const { data } = await gradingInstance.delete(`/categories/${id}`)
     if (data == null) console.error('Failed to delete category')
   })
@@ -68,7 +68,7 @@ export const loadConsumers = async (): Promise<void> => {
 
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   consumer('grade.delete', async (message) => {
-    const id = JSON.parse(message.content.toString()) as string
+    const { id } = JSON.parse(message.content.toString()) as { id: string }
     const { data } = await gradingInstance.delete(`/grades/${id}`)
     if (data == null) console.error('Failed to delete grade')
   })

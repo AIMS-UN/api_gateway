@@ -28,9 +28,6 @@ export class CategoryInput {
 
   @Field()
   group_id!: string
-
-  @Field()
-  subject_code!: string
 }
 
 @ObjectType()

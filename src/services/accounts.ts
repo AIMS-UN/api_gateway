@@ -7,142 +7,74 @@ import { getInstance } from '@/configs/axios'
 
 const accountMS = getInstance('account')
 
-/**
- * Aquí está la función para iniciar sesión
- *
- * @param {string} username
- * @param {string} password
- * @param {Session} session
- *
- * @returns {User} user
- */
-
 export const loginUser = async (username: string, password: string, session: Session): Promise<User> => {
-  const { data } = await accountMS.post('/auth/login', { username, password })
+  const body = { username, password }
 
-  session.token = data.token
+  const { data: { data, token } } = await accountMS.post('/auth/login', body)
 
-  return await new Promise((resolve) => {
-    resolve(data.data)
-  })
+  session.token = token
+
+  return data
 }
 
-/**
- * Aquí es la función de servicio para registar a los usuarios
- *
- * @param {string} username
- * @param {string} password
- * @param {string} role
- * @param {Session} session
- *
- * @return {User} user
- */
 export const registerUser = async (
   username: string,
   password: string,
   role: string,
   session: Session
 ): Promise<User> => {
-  const { data } = await accountMS.post('/auth/register', {
-    username,
-    password,
-    role
-  })
+  const body = { username, password, role }
 
-  session.token = data.token
+  const { data: { data, token } } = await accountMS.post('/auth/register', body)
 
-  return await new Promise((resolve) => {
-    resolve(data.data)
-  })
+  session.token = token
+
+  return data
 }
 
-/**
- * Esta es la función para colocar el token como nulo para cerrar la sesión.
- *
- * @param {Session} session
- *
- * @returns {boolean} true
- */
 export const logoutUser = async (session: Session): Promise<boolean> => {
   session.token = undefined
-  return await new Promise((resolve) => {
-    resolve(true)
-  })
+
+  return true
 }
 
-/**
- * La función que revisa el token de autenticación
- *
- * @param roles
- *
- * @returns
- */
-export const authChecker: AuthChecker<ExpressContext> = async ({ context: { req, res } }, roles) => {
+export const authChecker: AuthChecker<ExpressContext> = async ({ context: { req, res } }, roles): Promise<boolean> => {
   if (req.session.token == null) return false
 
-  const { data } = await accountMS.get('/accounts', {
-    headers: { Authorization: req.session.token }
-  })
+  const headers = { Authorization: req.session.token }
 
-  res.locals.user = data.data
+  const { data: { data } } = await accountMS.get('/accounts', { headers })
 
-  if (roles.length === 0) {
-    return true
-  }
+  res.locals.user = data
 
-  if (roles.includes(data.data.role)) {
-    return true
-  }
+  if (roles.length === 0) return true
+
+  if (roles.includes(data.role)) return true
 
   return false
 }
 
-/**
- * Aquí es la función para actualizar los datos de usuario
- *
- * @param {string} username
- * @param {string} password
- * @param {string} role
- *
- * @returns {User} user
- */
 export const updateUser = async (
   username: string,
   password: string,
   role: string,
   session: Session
 ): Promise<User> => {
-  const { data } = await accountMS.put('/accounts', {
-    // Aquí coloco los datos a actualizar
-    username,
-    password,
-    role
-  }, {
-    headers: { Authorization: session.token }
-  })
+  const body = { username, password, role }
+  const headers = { Authorization: session.token ?? '' }
 
-  return await new Promise((resolve) => {
-    resolve(data.data)
-  })
+  const { data: { data } } = await accountMS.put('/accounts', body, { headers })
+
+  return data
 }
 
-/**
- * Obtener algún usuario con su ID
- *
- * @param {string} id
- * @param {Session} session
- *
- * @returns {User} user
- */
 export const getUserByID = async (
   id: string,
   session: Session
 ): Promise<User> => {
-  const { data } = await accountMS.get(`/accounts/${id}`, {
-    headers: { Authorization: session.token }
-  })
+  const headers = { Authorization: session.token ?? '' }
 
-  return await new Promise((resolve) => {
-    resolve(data.data)
-  })
+  const { data: { data } } = await accountMS.get(`/accounts/${id}`, { headers })
+
+  return data
 }
