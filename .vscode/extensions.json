@@ -1,7 +1,3 @@
 {
-  "recommendations": [
-    "orsenkucher.vscode-graphql",
-    "standard.vscode-standard",
-    "usernamehw.errorlens"
-  ]
+  "recommendations": ["standard.vscode-standard", "usernamehw.errorlens"]
 }
