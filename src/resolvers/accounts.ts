@@ -10,7 +10,7 @@ export class AccountResolver {
   @Query(() => User)
   async myAccount (@Ctx() context: ExpressContext): Promise<User> {
     const { user } = context.res.locals as { user: User }
-    return await new Promise((resolve) => { resolve(user) })
+    return user
   }
 
   @Mutation(() => User)
