@@ -1,16 +1,16 @@
 import { Profile } from '@/schemas/profile'
 import { getInstance } from '@/configs/axios'
 
-const profileInstance = getInstance('profile')
+const profileMS = getInstance('profile')
 
 export const getProfilesById = async (userId: string): Promise<Profile> => {
-  const { data } = await profileInstance.get(`/profiles/${userId}`)
+  const { data } = await profileMS.get(`/profiles/${userId}`)
 
   return data
 }
 
 export const getProfiles = async (): Promise<Profile[]> => {
-  const { data } = await profileInstance.get('/profiles')
+  const { data } = await profileMS.get('/profiles')
 
   return data
 }

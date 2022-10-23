@@ -21,13 +21,13 @@ export class SubjectResolver {
   }
 
   @Query(() => [SubjectResponse])
-  async getSubjectbyCareer (@Arg('careerId') careerId: number): Promise<SubjectResponse[]> {
-    return await subjectService.getSubjectsbyCareer(careerId)
+  async getSubjectByCareer (@Arg('careerId') careerId: number): Promise<SubjectResponse[]> {
+    return await subjectService.getSubjectsByCareer(careerId)
   }
 
   @Query(() => SubjectResponse)
-  async getSubjectbyId (@Arg('subjectId') subjectId: number): Promise<SubjectResponse> {
-    return await subjectService.getSubjectbyId(subjectId)
+  async getSubjectById (@Arg('subjectId') subjectId: number): Promise<SubjectResponse> {
+    return await subjectService.getSubjectById(subjectId)
   }
 
   @Query(() => [ClassGroupResponse])

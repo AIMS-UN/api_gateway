@@ -1,20 +1,25 @@
-import { Arg, Query, Resolver } from 'type-graphql'
+import { Arg, Authorized, Ctx, Query, Resolver } from 'type-graphql'
 
 import * as scheduleService from '@/services/schedule'
-import { Enrollment } from '@/schemas/enrollment'
+import { ClassGroupResponse } from '@/schemas/subject'
+import { ExpressContext } from 'apollo-server-express'
+import { User } from '@/schemas/accounts'
 
 @Resolver()
 export class ScheduleResolver {
-  @Query(() => [Enrollment])
-  async getSchedule (@Arg('userId') userId: string): Promise<Enrollment[]> {
-    return await scheduleService.getSchedules(userId)
+  @Authorized()
+  @Query(() => [ClassGroupResponse])
+  async getMySchedule (@Ctx() context: ExpressContext): Promise<ClassGroupResponse[]> {
+    const { user } = context.res.locals as { user: User }
+    return await scheduleService.getMySchedule(user.id)
   }
 
-  @Query(() => [Enrollment])
-  async getScheduleBySemester (
-    @Arg('userId') userId: string,
-      @Arg('semester') semester: string
-  ): Promise<Enrollment[]> {
-    return await scheduleService.getScheduleBySemester(userId, semester)
+  @Authorized()
+  @Query(() => [ClassGroupResponse])
+  async getMyScheduleBySemester (
+    @Arg('semester') semester: string,
+      @Ctx() context: ExpressContext): Promise<ClassGroupResponse[]> {
+    const { user } = context.res.locals as { user: User }
+    return await scheduleService.getMyScheduleBySemester(user.id, semester)
   }
 }

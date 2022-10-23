@@ -6,20 +6,20 @@ import { Category, Grade, CategoryInput, GradeInput } from '@/schemas/grading'
 import { getInstance } from '@/configs/axios'
 import { publish as mqPublish } from '@/mq/publisher'
 
-const gradingInstance = getInstance('grading')
+const gradingMS = getInstance('grading')
 
 export const getCategories = async (
   { groupId, subjectCode }: { groupId?: string, subjectCode?: string } = {}
 ): Promise<Category[]> => {
   const params = { group_id: groupId, subject_code: subjectCode }
 
-  const { data: { data } } = await gradingInstance.get('/categories', { params })
+  const { data: { data } } = await gradingMS.get('/categories', { params })
 
   return data
 }
 
 export const getCategory = async (id: string): Promise<Category> => {
-  const { data: { data } } = await gradingInstance.get(`/categories/${id}`)
+  const { data: { data } } = await gradingMS.get(`/categories/${id}`)
 
   return data
 }
@@ -85,13 +85,13 @@ export const getGrades = async (
 ): Promise<Grade[]> => {
   const params = { category_id: categoryId, student_id: studentId }
 
-  const { data: { data } } = await gradingInstance.get('/grades', { params })
+  const { data: { data } } = await gradingMS.get('/grades', { params })
 
   return data
 }
 
 export const getGrade = async (id: string): Promise<Grade> => {
-  const { data: { data } } = await gradingInstance.get(`/grades/${id}`)
+  const { data: { data } } = await gradingMS.get(`/grades/${id}`)
 
   return data
 }

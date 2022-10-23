@@ -1,43 +1,25 @@
-import { Enrollment } from '@/schemas/enrollment'
-import { getInstance } from '@/configs/axios'
+import { ClassGroupResponse } from '@/schemas/subject'
 
-const ScheduleInstance = getInstance('schedule')
+import * as enrollmentService from '@/services/enrollment'
+import * as subjectService from '@/services/subject'
 
-export const getSchedules = async (userId: string): Promise<Enrollment[]> => {
-  const { data } = await ScheduleInstance.get(`/schedule/${userId}`)
+export const getMySchedule = async (
+  userId: string
+): Promise<ClassGroupResponse[]> => {
+  const enrollments = await enrollmentService.getAllEnrollmentsByFilter(userId)
 
-  const result = data.data.map((enrollment: any) => {
-    return {
-      finalGrade: enrollment.final_grade,
-      group: enrollment.group_id,
-      id: enrollment.enrollment_id,
-      semester: enrollment.semester,
-      subject: enrollment.subject_id,
-      user: enrollment.user_id
-    }
-  })
-
-  return result
+  return await Promise.all(
+    enrollments.map(async (enrollment) => await subjectService.getGroupById(enrollment.group))
+  )
 }
 
-export const getScheduleBySemester = async (
+export const getMyScheduleBySemester = async (
   userId: string,
   semester: string
-): Promise<Enrollment[]> => {
-  const { data } = await ScheduleInstance.get(
-    `/schedule/${userId}/${semester}`
+): Promise<ClassGroupResponse[]> => {
+  const enrollments = await enrollmentService.getAllEnrollmentsByFilter(userId, undefined, undefined, semester)
+
+  return await Promise.all(
+    enrollments.map(async (enrollment) => await subjectService.getGroupById(enrollment.group))
   )
-
-  const result = data.data.map((enrollment: any) => {
-    return {
-      finalGrade: enrollment.final_grade,
-      group: enrollment.group_id,
-      id: enrollment.enrollment_id,
-      semester: enrollment.semester,
-      subject: enrollment.subject_id,
-      user: enrollment.user_id
-    }
-  })
-
-  return result
 }
