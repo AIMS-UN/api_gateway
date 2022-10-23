@@ -22,42 +22,6 @@ export class Schedule {
 }
 
 @ObjectType()
-export class ClassGroup_ {
-  @Field()
-  groupId!: string
-
-  @Field()
-  maxCapacity!: number
-
-  @Field()
-  teacherId!: string
-
-  @Field(() => [Schedule])
-  schedules!: Schedule[]
-}
-
-@ObjectType()
-export class Subject_ {
-  @Field()
-  subjectId!: number
-
-  @Field()
-  subjectName!: string
-
-  @Field()
-  subjectCode!: string
-
-  @Field()
-  careerId!: number
-
-  @Field({ nullable: true })
-  curriculum?: string
-
-  @Field()
-  credits!: number
-}
-
-@ObjectType()
 export class ClassGroup {
   @Field()
   groupId!: string
@@ -67,9 +31,6 @@ export class ClassGroup {
 
   @Field()
   teacherId!: string
-
-  @Field()
-  subject!: Subject_
 
   @Field(() => [Schedule])
   schedules!: Schedule[]
@@ -94,7 +55,46 @@ export class Subject {
 
   @Field()
   credits!: number
+}
 
-  @Field(() => [ClassGroup_])
-  groups!: ClassGroup_[]
+@ObjectType()
+export class ClassGroupResponse {
+  @Field()
+  groupId!: string
+
+  @Field()
+  maxCapacity!: number
+
+  @Field()
+  teacherId!: string
+
+  @Field()
+  subject!: Subject
+
+  @Field(() => [Schedule])
+  schedules!: Schedule[]
+}
+
+@ObjectType()
+export class SubjectResponse {
+  @Field()
+  subjectId!: number
+
+  @Field()
+  subjectName!: string
+
+  @Field()
+  subjectCode!: string
+
+  @Field()
+  careerId!: number
+
+  @Field({ nullable: true })
+  curriculum?: string
+
+  @Field()
+  credits!: number
+
+  @Field(() => [ClassGroup])
+  groups!: ClassGroup[]
 }
