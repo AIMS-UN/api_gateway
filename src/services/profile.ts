@@ -1,5 +1,5 @@
-import { getInstance } from '@/configs/axios'
 import { Profile } from '@/schemas/profile'
+import { getInstance } from '@/configs/axios'
 
 const profileInstance = getInstance('profile')
 

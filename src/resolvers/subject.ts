@@ -1,6 +1,7 @@
-import { ClassGroup, Subject } from '@/schemas/subject'
-import * as subjectService from '@/services/subject'
 import { Arg, Query, Resolver } from 'type-graphql'
+
+import * as subjectService from '@/services/subject'
+import { ClassGroup, Subject } from '@/schemas/subject'
 
 @Resolver()
 export class SubjectResolver {

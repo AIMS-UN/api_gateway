@@ -1,9 +1,9 @@
 import { Arg, Authorized, Ctx, Query, Resolver } from 'type-graphql'
 import { ExpressContext } from 'apollo-server-express'
 
-import { getData } from '@/services/data'
 import { Data } from '@/schemas/data'
 import { User } from '@/schemas/accounts'
+import { getData } from '@/services/data'
 
 @Resolver()
 export class PingResolver {

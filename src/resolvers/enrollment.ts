@@ -1,7 +1,8 @@
 import { Arg, Query, Resolver, Mutation, Authorized, Ctx } from 'type-graphql'
+import { ExpressContext } from 'apollo-server-express'
+
 import * as enrollmentService from '@/services/enrollment'
 import { Enrollment } from '@/schemas/enrollment'
-import { ExpressContext } from 'apollo-server-express'
 import { User } from '@/schemas/accounts'
 
 @Resolver()

@@ -1,6 +1,7 @@
-import { CareerResponse, DepartmentResponse, FacultyResponse } from '@/schemas/college'
-import * as collegeService from '@/services/college'
 import { Arg, Query, Resolver } from 'type-graphql'
+
+import * as collegeService from '@/services/college'
+import { CareerResponse, DepartmentResponse, FacultyResponse } from '@/schemas/college'
 
 @Resolver()
 export class CollegeResolver {

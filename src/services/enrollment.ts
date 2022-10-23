@@ -1,25 +1,12 @@
-import { getInstance } from '@/configs/axios'
 import { Enrollment } from '@/schemas/enrollment'
+import { getInstance } from '@/configs/axios'
 
 const enrollmentMS = getInstance('enrollments')
 
 export const getAllEnrollmentsByFilter = async (user?: string, subject?: string, group?: string, semester?: string): Promise<Enrollment[]> => {
-  let url = '/enrollments?'
+  const params = { user, subject, group, semester }
 
-  if (user != null) { url += `user=${user}&` }
-  if (subject != null) { url += `subject=${subject}&` }
-  if (group != null) { url += `group=${group}&` }
-  if (semester != null) { url += `semester=${semester}&` }
-
-  console.log('Calling getAllEnrollmentsByFilter with url: ' + url)
-
-  const { data } = await enrollmentMS.get(url)
-
-  // const params = { user, subject, group, semester }
-
-  // const { data } = await enrollmentMS.get('/enrollments', { params })
-
-  console.log('getAllEnrollmentsByFilter result: ' + JSON.stringify(data))
+  const { data } = await enrollmentMS.get('/enrollments', { params })
 
   return data
 }
@@ -37,6 +24,7 @@ export const createEnrollment = async (
   semester: string
 ): Promise<Enrollment> => {
   const body = { user, subject, group, semester }
+
   const { data } = await enrollmentMS.post('/enrollments', body)
 
   return data

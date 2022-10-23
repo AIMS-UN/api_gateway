@@ -1,5 +1,6 @@
-import { getInstance } from '@/configs/axios'
 import { Enrollment } from '@/schemas/enrollment'
+import { getInstance } from '@/configs/axios'
+
 const ScheduleInstance = getInstance('schedule')
 
 export const getSchedules = async (userId: string): Promise<Enrollment[]> => {

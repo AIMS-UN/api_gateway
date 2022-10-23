@@ -1,6 +1,5 @@
-import { getInstance } from '@/configs/axios'
-
 import { CareerResponse, DepartmentResponse, FacultyResponse } from '@/schemas/college'
+import { getInstance } from '@/configs/axios'
 
 const collegeInstance = getInstance('college')
 
