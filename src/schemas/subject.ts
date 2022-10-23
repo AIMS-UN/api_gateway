@@ -1,12 +1,93 @@
 import { Field, ObjectType } from 'type-graphql'
 
 @ObjectType()
-export class Subject {
+export class Schedule {
   @Field()
-  subject_id!: number
+  scheduleId!: number
 
   @Field()
-  name!: string
+  day!: number
+
+  @Field()
+  startTime!: string
+
+  @Field()
+  endTime!: string
+
+  @Field()
+  classroom!: number
+
+  @Field()
+  building!: number
+}
+
+@ObjectType()
+export class ClassGroup_ {
+  @Field()
+  groupId!: string
+
+  @Field()
+  maxCapacity!: number
+
+  @Field()
+  teacherId!: string
+
+  @Field(() => [Schedule])
+  schedules!: Schedule[]
+}
+
+@ObjectType()
+export class Subject_ {
+  @Field()
+  subjectId!: number
+
+  @Field()
+  subjectName!: string
+
+  @Field()
+  subjectCode!: string
+
+  @Field()
+  careerId!: number
+
+  @Field({ nullable: true })
+  curriculum?: string
+
+  @Field()
+  credits!: number
+}
+
+@ObjectType()
+export class ClassGroup {
+  @Field()
+  groupId!: string
+
+  @Field()
+  maxCapacity!: number
+
+  @Field()
+  teacherId!: string
+
+  @Field()
+  subject!: Subject_
+
+  @Field(() => [Schedule])
+  schedules!: Schedule[]
+}
+
+@ObjectType()
+export class Subject {
+  @Field()
+  subjectId!: number
+
+  @Field()
+  subjectName!: string
+
+  @Field()
+  subjectCode!: string
+
+  @Field()
+  careerId!: number
 
   @Field({ nullable: true })
   curriculum?: string
@@ -14,21 +95,6 @@ export class Subject {
   @Field()
   credits!: number
 
-  @Field()
-  code!: string
-
-  @Field()
-  career!: number
-}
-
-@ObjectType()
-export class ClassGroups {
-  @Field()
-  classGroupId!: string
-
-  @Field()
-  max_capacity!: number
-
-  @Field()
-  teacher_id!: string
+  @Field(() => [ClassGroup_])
+  groups!: ClassGroup_[]
 }

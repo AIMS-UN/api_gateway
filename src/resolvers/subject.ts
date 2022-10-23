@@ -1,26 +1,41 @@
-import { ClassGroups, Subject } from '@/schemas/subject'
+import { ClassGroup, Subject } from '@/schemas/subject'
 import * as subjectService from '@/services/subject'
 import { Arg, Query, Resolver } from 'type-graphql'
 
 @Resolver()
 export class SubjectResolver {
   @Query(() => [Subject])
-  async getSubjectbyName (@Arg('name') name: string): Promise<Subject[]> {
-    return await subjectService.getSubjectbyName(name)
+  async getSubjects (): Promise<Subject[]> {
+    return await subjectService.getSubjects()
+  }
+
+  @Query(() => Subject)
+  async getSubjectByName (@Arg('subjectName') subjectName: string): Promise<Subject> {
+    return await subjectService.getSubjectByName(subjectName)
+  }
+
+  @Query(() => Subject)
+  async getSubjectByCode (@Arg('subjectCode') subjectCode: string): Promise<Subject> {
+    return await subjectService.getSubjectByCode(subjectCode)
   }
 
   @Query(() => [Subject])
-  async getSubjectbyCode (@Arg('code') code: string): Promise<Subject[]> {
-    return await subjectService.getSubjectbyCode(code)
+  async getSubjectbyCareer (@Arg('careerId') careerId: number): Promise<Subject[]> {
+    return await subjectService.getSubjectsbyCareer(careerId)
   }
 
-  @Query(() => [Subject])
-  async getSubjectbyCareer (@Arg('career') career: number): Promise<Subject[]> {
-    return await subjectService.getSubjectbyCareer(career)
+  @Query(() => Subject)
+  async getSubjectbyId (@Arg('subjectId') subjectId: number): Promise<Subject> {
+    return await subjectService.getSubjectbyId(subjectId)
   }
 
-  @Query(() => ClassGroups)
-  async getGroupById (@Arg('classGroupId') classGroupId: string): Promise<ClassGroups> {
+  @Query(() => [ClassGroup])
+  async getClassGroups (): Promise<ClassGroup[]> {
+    return await subjectService.getClassGroups()
+  }
+
+  @Query(() => ClassGroup)
+  async getGroupById (@Arg('classGroupId') classGroupId: string): Promise<ClassGroup> {
     return await subjectService.getGroupById(classGroupId)
   }
 }
