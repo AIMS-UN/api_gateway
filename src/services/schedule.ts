@@ -1,39 +1,25 @@
-import { getInstance } from '@/configs/axios'
-import { Enrollment } from '@/schemas/enrollment'
-const ScheduleInstance = getInstance('schedule')
+import { ClassGroupResponse } from '@/schemas/subject'
 
-export const getSchedules = async (userId: string): Promise<Enrollment[]> => {
-  const { data } = await ScheduleInstance.get(`/schedule/${userId}`)
-  const result = data.data.map((enrollment: any) => {
-    return {
-      finalGrade: enrollment.final_grade,
-      group: enrollment.group_id,
-      id: enrollment.enrollment_id,
-      semester: enrollment.semester,
-      subject: enrollment.subject_id,
-      user: enrollment.user_id
-    }
-  })
-  return await new Promise((resolve) => resolve(result))
+import * as enrollmentService from '@/services/enrollment'
+import * as subjectService from '@/services/subject'
+
+export const getMySchedule = async (
+  userId: string
+): Promise<ClassGroupResponse[]> => {
+  const enrollments = await enrollmentService.getAllEnrollmentsByFilter(userId)
+
+  return await Promise.all(
+    enrollments.map(async (enrollment) => await subjectService.getGroupById(enrollment.group))
+  )
 }
 
-export const getScheduleBySemester = async (
+export const getMyScheduleBySemester = async (
   userId: string,
   semester: string
-): Promise<Enrollment[]> => {
-  const { data } = await ScheduleInstance.get(
-    `/schedule/${userId}/${semester}`
-  )
-  const result = data.data.map((enrollment: any) => {
-    return {
-      finalGrade: enrollment.final_grade,
-      group: enrollment.group_id,
-      id: enrollment.enrollment_id,
-      semester: enrollment.semester,
-      subject: enrollment.subject_id,
-      user: enrollment.user_id
-    }
-  })
+): Promise<ClassGroupResponse[]> => {
+  const enrollments = await enrollmentService.getAllEnrollmentsByFilter(userId, undefined, undefined, semester)
 
-  return await new Promise((resolve) => resolve(result))
+  return await Promise.all(
+    enrollments.map(async (enrollment) => await subjectService.getGroupById(enrollment.group))
+  )
 }

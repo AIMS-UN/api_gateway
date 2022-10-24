@@ -1,52 +1,46 @@
-import { Arg, Query, Resolver, Mutation } from 'type-graphql'
+import { Arg, Query, Resolver, Mutation, Authorized, Ctx } from 'type-graphql'
+import { ExpressContext } from 'apollo-server-express'
+
 import * as enrollmentService from '@/services/enrollment'
-import { Enrollment, EnrollmentInput } from '@/schemas/enrollment'
+import { Enrollment } from '@/schemas/enrollment'
+import { User } from '@/schemas/accounts'
 
 @Resolver()
 export class EnrollmentResolver {
-  // enrollmentsList: Enrollment[] = []
-
+  @Authorized()
   @Query(() => [Enrollment])
-  async getEnrollments (@Arg('input') input: EnrollmentInput): Promise<Enrollment[]> {
-    const userId = input.user
-    const groupId = input.group
-    const subjectId = input.subject
-    const semester = input.semester
-    if (userId != null && groupId == null && subjectId == null && semester == null) {
-      return await enrollmentService.getEnrollmentsByUser(userId)
-    } else if (userId == null && groupId != null && subjectId == null && semester == null) {
-      return await enrollmentService.getEnrollmentsByGroup(groupId)
-    } else if (userId == null && groupId == null && subjectId != null && semester == null) {
-      return await enrollmentService.getEnrollmentsBySubject(subjectId)
-    } else if (userId == null && groupId == null && subjectId == null && semester != null) {
-      return await enrollmentService.getEnrollmentsBySemester(semester)
-    } else if (userId == null && groupId == null && subjectId != null && semester != null) {
-      return await enrollmentService.getEnrollmentsBySubjectAndSemester(subjectId, semester)
-    } else if (userId != null && groupId == null && subjectId == null && semester != null) {
-      return await enrollmentService.getEnrollmentsByUserAndSemester(userId, semester)
-    } else {
-      return await enrollmentService.getAllEnrollments()
-    }
-    // return this.enrollmentsList
+  async getEnrollmentsByFilters (
+    @Arg('subjectId', { nullable: true }) subjectId: number,
+      @Arg('groupId', { nullable: true }) groupId: string,
+      @Arg('semester', { nullable: true }) semester: string,
+      @Ctx() context: ExpressContext): Promise<Enrollment[]> {
+    const { user } = context.res.locals as { user: User }
+    return await enrollmentService.getAllEnrollmentsByFilter(user.id, subjectId, groupId, semester)
   }
 
+  @Authorized()
   @Query(() => Enrollment)
-  async getById (@Arg('id') id: number): Promise<Enrollment> {
-    return await enrollmentService.getEnrollment(id)
+  async getEnrollmentById (@Arg('enrollmentId') enrollmentId: string): Promise<Enrollment> {
+    return await enrollmentService.getEnrollmentById(enrollmentId)
   }
 
+  @Authorized()
   @Mutation(() => Enrollment)
-  async create (@Arg('input') input: EnrollmentInput): Promise<Enrollment> {
-    return await enrollmentService.createEnrollment(input)
+  async createEnrollment (
+    @Arg('groupId') groupId: string,
+      @Arg('semester') semester: string,
+      @Ctx() context: ExpressContext): Promise<Enrollment | undefined> {
+    const { user } = context.res.locals as { user: User }
+    return await enrollmentService.createEnrollment(user.id, groupId, semester)
   }
 
+  @Authorized()
   @Mutation(() => Enrollment)
-  async cancel (@Arg('input') input: EnrollmentInput): Promise<Enrollment> {
-    return await enrollmentService.cancelEnrollment(input)
-  }
-
-  @Mutation(() => Enrollment)
-  async setFinalGrade (@Arg('input') input: EnrollmentInput): Promise<Enrollment> {
-    return await enrollmentService.updateFinalGrade(input)
+  async cancelEnrollment (
+    @Arg('subjectId') subjectId: string,
+      @Arg('semester') semester: string,
+      @Ctx() context: ExpressContext): Promise<Enrollment> {
+    const { user } = context.res.locals as { user: User }
+    return await enrollmentService.cancelEnrollment(user.id, subjectId, semester)
   }
 }

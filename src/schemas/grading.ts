@@ -1,4 +1,4 @@
-import { Field, ObjectType } from 'type-graphql'
+import { Field, InputType, ObjectType } from 'type-graphql'
 
 @ObjectType()
 export class Category {
@@ -15,10 +15,10 @@ export class Category {
   group_id!: string
 
   @Field()
-  subject_id!: string
+  subject_code!: string
 }
 
-@ObjectType()
+@InputType()
 export class CategoryInput {
   @Field()
   name!: string
@@ -28,9 +28,6 @@ export class CategoryInput {
 
   @Field()
   group_id!: string
-
-  @Field()
-  subject_id!: string
 }
 
 @ObjectType()
@@ -48,7 +45,7 @@ export class Grade {
   score!: number
 }
 
-@ObjectType()
+@InputType()
 export class GradeInput {
   @Field()
   category_id!: string

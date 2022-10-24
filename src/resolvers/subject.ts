@@ -1,25 +1,42 @@
-import { Subject } from '@/schemas/subject'
-import * as subjectService from '@/services/subject'
 import { Arg, Query, Resolver } from 'type-graphql'
+
+import * as subjectService from '@/services/subject'
+import { ClassGroupResponse, SubjectResponse } from '@/schemas/subject'
 
 @Resolver()
 export class SubjectResolver {
-  @Query(() => [Subject])
-  async getSubjectbyName (@Arg('name') name: string): Promise<Subject[]> {
-    const a = await subjectService.getSubjectbyName(name)
-    console.log(a)
-    return a
+  @Query(() => [SubjectResponse])
+  async getSubjects (): Promise<SubjectResponse[]> {
+    return await subjectService.getSubjects()
   }
 
-  @Query(() => [Subject])
-  async getSubjectbyCode (@Arg('code') code: number): Promise<Subject[]> {
-    const a = await subjectService.getSubjectbyCode(code)
-    console.log(a)
-    return a
+  @Query(() => SubjectResponse)
+  async getSubjectByName (@Arg('subjectName') subjectName: string): Promise<SubjectResponse> {
+    return await subjectService.getSubjectByName(subjectName)
   }
 
-  @Query(() => [Subject])
-  async getSubjectbyCareer (@Arg('career') career: number): Promise<Subject[]> {
-    return await subjectService.getSubjectbyCareer(career)
+  @Query(() => SubjectResponse)
+  async getSubjectByCode (@Arg('subjectCode') subjectCode: string): Promise<SubjectResponse> {
+    return await subjectService.getSubjectByCode(subjectCode)
+  }
+
+  @Query(() => [SubjectResponse])
+  async getSubjectByCareer (@Arg('careerId') careerId: number): Promise<SubjectResponse[]> {
+    return await subjectService.getSubjectsByCareer(careerId)
+  }
+
+  @Query(() => SubjectResponse)
+  async getSubjectById (@Arg('subjectId') subjectId: number): Promise<SubjectResponse> {
+    return await subjectService.getSubjectById(subjectId)
+  }
+
+  @Query(() => [ClassGroupResponse])
+  async getClassGroups (): Promise<ClassGroupResponse[]> {
+    return await subjectService.getClassGroups()
+  }
+
+  @Query(() => ClassGroupResponse)
+  async getGroupById (@Arg('classGroupId') classGroupId: string): Promise<ClassGroupResponse> {
+    return await subjectService.getGroupById(classGroupId)
   }
 }

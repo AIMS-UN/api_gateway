@@ -1,4 +1,4 @@
-import { Field, ObjectType } from 'type-graphql'
+import { Field, InputType, ObjectType } from 'type-graphql'
 
 @ObjectType()
 export class Historials {
@@ -13,9 +13,6 @@ export class Historials {
 
   @Field()
   GPA!: number
-
-  @Field()
-  enrollment_id!: number
 
   @Field()
   career!: number
@@ -46,4 +43,46 @@ export class Profile {
 
   @Field(type => [Historials])
   historials!: Historials[ ]
+}
+
+@InputType()
+export class HistorialsInput {
+  @Field()
+  coursed_credits!: number
+
+  @Field()
+  approved_credits!: number
+
+  @Field()
+  reprobed_credits!: number
+
+  @Field()
+  GPA!: number
+
+  @Field()
+  career!: number
+}
+
+@InputType()
+export class ProfileInput {
+  @Field()
+  name!: string
+
+  @Field()
+  lastname!: string
+
+  @Field()
+  email!: string
+
+  @Field()
+  birthdate!: string
+
+  @Field()
+  phone_number!: string
+
+  @Field()
+  address!: string
+
+  @Field(type => [HistorialsInput])
+  historials!: HistorialsInput[]
 }

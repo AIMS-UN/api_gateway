@@ -1,22 +1,100 @@
 import { Field, ObjectType } from 'type-graphql'
 
 @ObjectType()
-export class Subject {
+export class Schedule {
   @Field()
-  subject_id!: number
+  scheduleId!: number
 
   @Field()
-  name!: string
+  day!: number
+
+  @Field()
+  startTime!: string
+
+  @Field()
+  endTime!: string
+
+  @Field()
+  classroom!: number
+
+  @Field()
+  building!: number
+}
+
+@ObjectType()
+export class ClassGroup {
+  @Field()
+  groupId!: string
+
+  @Field()
+  maxCapacity!: number
+
+  @Field()
+  teacherId!: string
+
+  @Field(() => [Schedule])
+  schedules!: Schedule[]
+}
+
+@ObjectType()
+export class Subject {
+  @Field()
+  subjectId!: number
+
+  @Field()
+  subjectName!: string
+
+  @Field()
+  subjectCode!: string
+
+  @Field()
+  careerId!: number
 
   @Field({ nullable: true })
   curriculum?: string
 
   @Field()
-  credits?: number
+  credits!: number
+}
+
+@ObjectType()
+export class ClassGroupResponse {
+  @Field()
+  groupId!: string
 
   @Field()
-  code?: Number
+  maxCapacity!: number
 
   @Field()
-  career?: Number
+  teacherId!: string
+
+  @Field()
+  subject!: Subject
+
+  @Field(() => [Schedule])
+  schedules!: Schedule[]
+}
+
+@ObjectType()
+export class SubjectResponse {
+  @Field()
+  subjectId!: number
+
+  @Field()
+  subjectName!: string
+
+  @Field()
+  subjectCode!: string
+
+  @Field()
+  careerId!: number
+
+  @Field({ nullable: true })
+  curriculum?: string
+
+  @Field()
+  credits!: number
+
+  @Field(() => [ClassGroup])
+  groups!: ClassGroup[]
 }

@@ -1,62 +1,96 @@
+import * as subjectService from '@/services/subject'
+import { Enrollment } from '@/schemas/enrollment'
 import { getInstance } from '@/configs/axios'
-import { Enrollment, EnrollmentInput } from '@/schemas/enrollment'
 
 const enrollmentMS = getInstance('enrollments')
 
-export const getAllEnrollments = async (): Promise<Enrollment[]> => {
-  const { enrollments } = await enrollmentMS.get('/enrollments')
-  return await new Promise((resolve) => { resolve(enrollments) })
-}
+export const getAllEnrollmentsByFilter = async (
+  userId?: string,
+  subjectId?: number,
+  groupId?: string,
+  semester?: string
+): Promise<Enrollment[]> => {
+  const params = { user: userId, subject: subjectId, group: groupId, semester }
 
-export const getEnrollmentsByUser = async (user: string): Promise<Enrollment[]> => {
-  const { enrollments } = await enrollmentMS.get(`/enrollments?user=${user}`)
-  return await new Promise((resolve) => { resolve(enrollments) })
-}
+  if (groupId != null) {
+    const group = await subjectService.getGroupById(groupId)
+    if (group == null) {
+      console.log('Group not found')
+      return []
+    }
 
-export const getEnrollmentsByGroup = async (group: string): Promise<Enrollment[]> => {
-  const { enrollments } = await enrollmentMS.get(`/enrollments?group=${group}`)
-  return await new Promise((resolve) => { resolve(enrollments) })
-}
-
-export const getEnrollmentsBySubject = async (subject: string): Promise<Enrollment[]> => {
-  const { enrollments } = await enrollmentMS.get(`/enrollments?subject=${subject}`)
-  return await new Promise((resolve) => { resolve(enrollments) })
-}
-
-export const getEnrollmentsBySemester = async (semester: string): Promise<Enrollment[]> => {
-  const { enrollments } = await enrollmentMS.get(`/enrollments?semester=${semester}`)
-  return await new Promise((resolve) => { resolve(enrollments) })
-}
-
-export const getEnrollmentsBySubjectAndSemester = async (subject: string, semester: string): Promise<Enrollment[]> => {
-  const { enrollments } = await enrollmentMS.get(`/enrollments?user=${subject}&semester=${semester}`)
-  return await new Promise((resolve) => { resolve(enrollments) })
-}
-
-export const getEnrollmentsByUserAndSemester = async (user: string, semester: string): Promise<Enrollment[]> => {
-  const { enrollments } = await enrollmentMS.get(`/enrollments?user=${user}&semester=${semester}`)
-  return await new Promise((resolve) => { resolve(enrollments) })
-}
-
-export const getEnrollment = async (id: number): Promise<Enrollment> => {
-  const { enrollment } = await enrollmentMS.get(`/enrollments/${id}`)
-  return await new Promise((resolve) => { resolve(enrollment) })
-}
-
-export const createEnrollment = async (enrollment: EnrollmentInput): Promise<Enrollment> => {
-  const { newEnrollment } = await enrollmentMS.post('/enrollments', enrollment)
-  return await new Promise((resolve) => { resolve(newEnrollment) })
-}
-
-export const cancelEnrollment = async (enrollment: EnrollmentInput): Promise<Enrollment> => {
-  if (enrollment.user == null || enrollment.subject == null) {
-    return null as any
+    if (subjectId != null && subjectId !== group.subject.subjectId) {
+      console.log('Subject and group do not match')
+      return []
+    }
+  } else if (subjectId != null) {
+    const subject = await subjectService.getSubjectById(subjectId)
+    if (subject == null) {
+      console.log('Subject not found')
+      return []
+    }
   }
-  const { cancelledEnrollment } = await enrollmentMS.delete(`/enrollments?user=${enrollment.user}&subject=&${enrollment.subject}`)
-  return await new Promise((resolve) => { resolve(cancelledEnrollment) })
+
+  const { data } = await enrollmentMS.get('/enrollments', { params })
+
+  return data
 }
 
-export const updateFinalGrade = async (enrollment: EnrollmentInput): Promise<Enrollment> => {
-  const { newEnrollment } = await enrollmentMS.put('/enrollments/grade', enrollment)
-  return await new Promise((resolve) => { resolve(newEnrollment) })
+export const getEnrollmentById = async (enrollmentId: string): Promise<Enrollment> => {
+  const { data } = await enrollmentMS.get(`/enrollments/${enrollmentId}`)
+
+  return data
+}
+
+export const createEnrollment = async (
+  userId: string,
+  groupId: string,
+  semester: string
+): Promise<Enrollment | undefined> => {
+  const group = await subjectService.getGroupById(groupId)
+  if (group == null) {
+    console.error('Group not found')
+    return
+  }
+
+  const subjectId = group.subject.subjectId
+
+  const body = { user: userId, subject: subjectId, group: groupId, semester }
+
+  const { data } = await enrollmentMS.post('/enrollments', body)
+
+  return data
+}
+
+export const cancelEnrollment = async (
+  userId: string,
+  subjectId: string,
+  semester: string
+): Promise<Enrollment> => {
+  const params = { user: userId, subject: subjectId, semester }
+
+  const { data } = await enrollmentMS.delete('/enrollments', { params })
+
+  return data
+}
+
+export const updateFinalGrade = async (
+  userId: string,
+  groupId: string,
+  semester: string,
+  finalGrade: number
+): Promise<Enrollment | undefined> => {
+  const group = await subjectService.getGroupById(groupId)
+  if (group == null) {
+    console.error('Group not found')
+    return
+  }
+
+  const subjectId = group.subject.subjectId
+
+  const body = { user: userId, subject: subjectId, group: groupId, semester, finalGrade }
+
+  const { data } = await enrollmentMS.put('/enrollments/grade', body)
+
+  return data
 }

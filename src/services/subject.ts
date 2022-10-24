@@ -1,22 +1,52 @@
+import { ClassGroupResponse, SubjectResponse } from '@/schemas/subject'
 import { getInstance } from '@/configs/axios'
 
-import { Subject } from '@/schemas/subject'
+const subjectMS = getInstance('subject')
 
-const subjectInstance = getInstance('subject')
+export const getSubjects = async (): Promise<SubjectResponse[]> => {
+  const { data } = await subjectMS.get('/subjects')
 
-export const getSubjectbyName = async (name: string): Promise<Subject[]> => {
-  const { data } = await subjectInstance.get(`/subjects?name=${name}`)
-  console.log(data)
-
-  return await new Promise((resolve) => { resolve(data) })
+  return data
 }
 
-export const getSubjectbyCode = async (code: number): Promise<Subject[]> => {
-  const { data } = await subjectInstance.get(`/subjects?code=${code}`)
-  return await new Promise((resolve) => { resolve(data) })
+export const getSubjectByName = async (subjectName: string): Promise<SubjectResponse> => {
+  const params = { subjectName }
+
+  const { data } = await subjectMS.get('/subjects', { params })
+
+  return data.length > 0 ? data[0] : null
 }
 
-export const getSubjectbyCareer = async (career: number): Promise<Subject[]> => {
-  const { data } = await subjectInstance.get(`/subjects?career=${career}`)
-  return await new Promise((resolve) => { resolve(data) })
+export const getSubjectByCode = async (subjectCode: string): Promise<SubjectResponse> => {
+  const params = { subjectCode }
+
+  const { data } = await subjectMS.get('/subjects', { params })
+
+  return data.length > 0 ? data[0] : null
+}
+
+export const getSubjectsByCareer = async (careerId: number): Promise<SubjectResponse[]> => {
+  const params = { careerId }
+
+  const { data } = await subjectMS.get('/subjects', { params })
+
+  return data
+}
+
+export const getSubjectById = async (subjectId: number): Promise<SubjectResponse> => {
+  const { data } = await subjectMS.get(`/subjects/${subjectId}`)
+
+  return data
+}
+
+export const getClassGroups = async (): Promise<ClassGroupResponse[]> => {
+  const { data } = await subjectMS.get('/groups')
+
+  return data
+}
+
+export const getGroupById = async (classGroupId: string): Promise<ClassGroupResponse> => {
+  const { data } = await subjectMS.get(`/groups/${classGroupId}`)
+
+  return data
 }
