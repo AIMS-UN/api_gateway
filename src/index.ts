@@ -35,7 +35,7 @@ startServer()
     server.applyMiddleware({
       app,
       path: '/graphql',
-      cors: { credentials: true, origin: 'https://studio.apollographql.com' }
+      cors: { credentials: true, origin: ['https://studio.apollographql.com', process.env.FRONTEND_URL ?? ''] }
     })
 
     app.listen(PORT, () => {
