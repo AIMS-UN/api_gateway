@@ -24,6 +24,9 @@ export class Profile {
   user_id!: string
 
   @Field()
+  doc_id!: number
+
+  @Field()
   name!: string
 
   @Field()
@@ -67,6 +70,9 @@ export class HistorialsInput {
 export class ProfileInput {
   @Field()
   name!: string
+
+  @Field()
+  doc_id!: number
 
   @Field()
   lastname!: string
