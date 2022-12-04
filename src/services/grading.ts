@@ -1,5 +1,3 @@
-import { Session } from 'express-session'
-
 import * as accountService from '@/services/accounts'
 import * as subjectService from '@/services/subject'
 import { Category, Grade, CategoryInput, GradeInput } from '@/schemas/grading'
@@ -24,7 +22,7 @@ export const getCategory = async (id: string): Promise<Category> => {
   return data
 }
 
-export const createCategory = async (category: CategoryInput): Promise<String> => {
+export const createCategory = async (category: CategoryInput): Promise<string> => {
   const { group_id: groupId } = category
 
   const group = await subjectService.getGroupById(groupId)
@@ -44,7 +42,7 @@ export const createCategory = async (category: CategoryInput): Promise<String> =
 export const updateCategory = async (
   categoryId: string,
   category: CategoryInput
-): Promise<String> => {
+): Promise<string> => {
   const { group_id: groupId } = category
 
   const group = await subjectService.getGroupById(groupId)
@@ -67,7 +65,7 @@ export const updateCategory = async (
   return 'Category updated'
 }
 
-export const deleteCategory = async (id: string): Promise<String> => {
+export const deleteCategory = async (id: string): Promise<string> => {
   const category = await getCategory(id)
 
   if (category == null) {
@@ -96,7 +94,7 @@ export const getGrade = async (id: string): Promise<Grade> => {
   return data
 }
 
-export const createGrade = async (grade: GradeInput, session: Session): Promise<String> => {
+export const createGrade = async (grade: GradeInput, token: string): Promise<string> => {
   const { category_id: categoryId, student_id: studentId } = grade
 
   const category = await getCategory(categoryId)
@@ -105,7 +103,7 @@ export const createGrade = async (grade: GradeInput, session: Session): Promise<
     return 'Category does not exist'
   }
 
-  const student = await accountService.getUserByID(studentId, session)
+  const student = await accountService.getUserByID(studentId, token)
   if (student == null) {
     console.error(`Student with id ${studentId} does not exist`)
     return 'Student does not exist'
@@ -119,8 +117,8 @@ export const createGrade = async (grade: GradeInput, session: Session): Promise<
 export const updateGrade = async (
   gradeId: string,
   grade: GradeInput,
-  session: Session
-): Promise<String> => {
+  token: string
+): Promise<string> => {
   const { category_id: categoryId, student_id: studentId } = grade
 
   const category = await getCategory(categoryId)
@@ -129,7 +127,7 @@ export const updateGrade = async (
     return 'Category does not exist'
   }
 
-  const student = await accountService.getUserByID(studentId, session)
+  const student = await accountService.getUserByID(studentId, token)
   if (student == null) {
     console.error(`Student with id ${studentId} does not exist`)
     return 'Student does not exist'
@@ -146,7 +144,7 @@ export const updateGrade = async (
   return 'Grade updated'
 }
 
-export const deleteGrade = async (id: string): Promise<String> => {
+export const deleteGrade = async (id: string): Promise<string> => {
   const grade = await getGrade(id)
 
   if (grade == null) {

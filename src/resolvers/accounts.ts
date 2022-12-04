@@ -1,7 +1,7 @@
 import { Arg, Mutation, Query, Resolver, Ctx, Authorized } from 'type-graphql'
 import { ExpressContext } from 'apollo-server-express'
 
-import { User } from '@/schemas/accounts'
+import { Login, User } from '@/schemas/accounts'
 import * as accountService from '@/services/accounts'
 
 @Resolver()
@@ -13,30 +13,25 @@ export class AccountResolver {
     return user
   }
 
-  @Mutation(() => User)
+  @Mutation(() => Login)
   async login (
     @Arg('username') username: string,
-      @Arg('password') password: string,
-      @Ctx() context: ExpressContext): Promise<User> {
-    const session = context.req.session
-    return await accountService.loginUser(username, password, session)
+      @Arg('password') password: string): Promise<Login> {
+    return await accountService.loginUser(username, password)
   }
 
-  @Mutation(() => User)
+  @Mutation(() => Login)
   async register (
     @Arg('username') username: string,
       @Arg('password') password: string,
-      @Arg('role') role: string,
-      @Ctx() context: ExpressContext): Promise<User> {
-    const session = context.req.session
-    return await accountService.registerUser(username, password, role, session)
+      @Arg('role') role: string): Promise<Login> {
+    return await accountService.registerUser(username, password, role)
   }
 
   @Authorized()
   @Mutation(() => Boolean)
-  async logout (@Ctx() context: ExpressContext): Promise<boolean> {
-    const session = context.req.session
-    return await accountService.logoutUser(session)
+  async logout (): Promise<boolean> {
+    return await accountService.logoutUser()
   }
 
   @Authorized()
@@ -46,8 +41,9 @@ export class AccountResolver {
       @Arg('password') password: string,
       @Arg('role') role: string,
       @Ctx() context: ExpressContext): Promise<User> {
-    const session = context.req.session
-    return await accountService.updateUser(username, password, role, session)
+    const token = context.req.headers.authorization
+    if (token == null) return { id: '0', username: 'NO_TOKEN_FOUND', role: '' }
+    return await accountService.updateUser(username, password, role, token)
   }
 
   @Authorized('teacher')
@@ -55,7 +51,8 @@ export class AccountResolver {
   async getUserByID (
     @Arg('userID') userID: string,
       @Ctx() context: ExpressContext): Promise<User> {
-    const session = context.req.session
-    return await accountService.getUserByID(userID, session)
+    const token = context.req.headers.authorization
+    if (token == null) return { id: '0', username: 'NO_TOKEN_FOUND', role: '' }
+    return await accountService.getUserByID(userID, token)
   }
 }
