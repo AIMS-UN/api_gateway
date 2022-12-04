@@ -30,9 +30,8 @@ export class AccountResolver {
 
   @Authorized()
   @Mutation(() => Boolean)
-  async logout (@Ctx() context: ExpressContext): Promise<boolean> {
-    const session = context.req.session
-    return await accountService.logoutUser(session)
+  async logout (): Promise<boolean> {
+    return await accountService.logoutUser()
   }
 
   @Authorized()
