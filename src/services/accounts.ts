@@ -2,34 +2,29 @@ import { AuthChecker } from 'type-graphql'
 import { ExpressContext } from 'apollo-server-express'
 import { Session } from 'express-session'
 
-import { User } from '@/schemas/accounts'
+import { Login, User } from '@/schemas/accounts'
 import { getInstance } from '@/configs/axios'
 
 const accountMS = getInstance('account')
 
-export const loginUser = async (username: string, password: string, session: Session): Promise<User> => {
+export const loginUser = async (username: string, password: string): Promise<Login> => {
   const body = { username, password }
 
   const { data: { data, token } } = await accountMS.post('/auth/login', body)
 
-  session.token = token
-
-  return data
+  return { token, user: data }
 }
 
 export const registerUser = async (
   username: string,
   password: string,
-  role: string,
-  session: Session
-): Promise<User> => {
+  role: string
+): Promise<Login> => {
   const body = { username, password, role }
 
   const { data: { data, token } } = await accountMS.post('/auth/register', body)
 
-  session.token = token
-
-  return data
+  return { token, user: data }
 }
 
 export const logoutUser = async (session: Session): Promise<boolean> => {
@@ -39,9 +34,10 @@ export const logoutUser = async (session: Session): Promise<boolean> => {
 }
 
 export const authChecker: AuthChecker<ExpressContext> = async ({ context: { req, res } }, roles): Promise<boolean> => {
-  if (req.session.token == null) return false
+  const token = req.headers.authorization
+  if (token == null) return false
 
-  const headers = { Authorization: req.session.token }
+  const headers = { Authorization: token }
 
   const { data: { data } } = await accountMS.get('/accounts', { headers })
 
@@ -58,10 +54,10 @@ export const updateUser = async (
   username: string,
   password: string,
   role: string,
-  session: Session
+  token: string
 ): Promise<User> => {
   const body = { username, password, role }
-  const headers = { Authorization: session.token ?? '' }
+  const headers = { Authorization: token ?? '' }
 
   const { data: { data } } = await accountMS.put('/accounts', body, { headers })
 
@@ -70,9 +66,9 @@ export const updateUser = async (
 
 export const getUserByID = async (
   id: string,
-  session: Session
+  token: string
 ): Promise<User> => {
-  const headers = { Authorization: session.token ?? '' }
+  const headers = { Authorization: token ?? '' }
 
   const { data: { data } } = await accountMS.get(`/accounts/${id}`, { headers })
 
