@@ -17,3 +17,12 @@ export class User {
   @Field({ nullable: true })
   createdAt?: string
 }
+
+@ObjectType()
+export class Login {
+  @Field()
+  token!: string
+
+  @Field()
+  user!: User
+}

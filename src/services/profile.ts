@@ -1,13 +1,11 @@
-import { Session } from 'express-session'
-
 import { Profile, ProfileInput } from '@/schemas/profile'
 import { getInstance } from '@/configs/axios'
 import * as accountService from '@/services/accounts'
 
 const profileMS = getInstance('profile')
 
-export const getProfilesById = async (userId: string, session: Session): Promise<Profile | string> => {
-  const user = await accountService.getUserByID(userId, session)
+export const getProfilesById = async (userId: string, token: string): Promise<Profile | string> => {
+  const user = await accountService.getUserByID(userId, token)
 
   if (user == null) {
     console.error(`User with id ${userId} does not exist`)

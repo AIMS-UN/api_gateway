@@ -19,8 +19,9 @@ export class ProfileResolver {
     @Arg('user_id') userId: string,
       @Ctx() context: ExpressContext
   ): Promise<Profile | string> {
-    const session = context.req.session
-    return await profileService.getProfilesById(userId, session)
+    const token = context.req.headers.authorization
+    if (token == null) return 'NO_TOKEN_FOUND'
+    return await profileService.getProfilesById(userId, token)
   }
 
   @Authorized()

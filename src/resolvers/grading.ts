@@ -23,7 +23,7 @@ export class GradingResolver {
   @Mutation(() => String)
   async createGradingCategory (
     @Arg('categoryInput') categoryInput: CategoryInput
-  ): Promise<String> {
+  ): Promise<string> {
     return await gradingService.createCategory(categoryInput)
   }
 
@@ -32,13 +32,13 @@ export class GradingResolver {
   async updateGradingCategory (
     @Arg('id') id: string,
       @Arg('categoryInput') categoryInput: CategoryInput
-  ): Promise<String> {
+  ): Promise<string> {
     return await gradingService.updateCategory(id, categoryInput)
   }
 
   @Authorized('teacher')
   @Mutation(() => String)
-  async deleteGradingCategory (@Arg('id') id: string): Promise<String> {
+  async deleteGradingCategory (@Arg('id') id: string): Promise<string> {
     return await gradingService.deleteCategory(id)
   }
 
@@ -60,9 +60,10 @@ export class GradingResolver {
   async createGrade (
     @Arg('gradeInput') gradeInput: GradeInput,
       @Ctx() context: ExpressContext
-  ): Promise<String> {
-    const session = context.req.session
-    return await gradingService.createGrade(gradeInput, session)
+  ): Promise<string> {
+    const token = context.req.headers.authorization
+    if (token == null) return 'NO_TOKEN_FOUND'
+    return await gradingService.createGrade(gradeInput, token)
   }
 
   @Authorized('teacher')
@@ -71,14 +72,15 @@ export class GradingResolver {
     @Arg('id') id: string,
       @Arg('gradeInput') gradeInput: GradeInput,
       @Ctx() context: ExpressContext
-  ): Promise<String> {
-    const session = context.req.session
-    return await gradingService.updateGrade(id, gradeInput, session)
+  ): Promise<string> {
+    const token = context.req.headers.authorization
+    if (token == null) return 'NO_TOKEN_FOUND'
+    return await gradingService.updateGrade(id, gradeInput, token)
   }
 
   @Authorized('teacher')
   @Mutation(() => String)
-  async deleteGrade (@Arg('id') id: string): Promise<String> {
+  async deleteGrade (@Arg('id') id: string): Promise<string> {
     return await gradingService.deleteGrade(id)
   }
 }

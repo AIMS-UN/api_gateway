@@ -27,7 +27,7 @@ app.use(session({
   cookie: { secure: true, sameSite: 'none', maxAge: 2 * 60 * 60 * 1000 }
 }))
 
-app.set('trust proxy', 1)
+app.set('trust proxy', true)
 
 // Setup graphql
 startServer()
