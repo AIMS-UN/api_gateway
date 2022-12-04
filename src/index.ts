@@ -2,15 +2,10 @@ import 'module-alias/register'
 import 'reflect-metadata'
 
 import express from 'express'
-import session from 'express-session'
 
 import { PORT, HOST, NODE_ENV } from '@/configs/index'
 import { loadConsumers } from '@/mq/consumers'
 import { startServer } from '@/app'
-
-declare module 'express-session' {
-  interface Session { token: string | undefined }
-}
 
 loadConsumers().then(() => {
   console.log('MQ consumers loaded')
@@ -19,13 +14,6 @@ loadConsumers().then(() => {
 })
 
 const app = express()
-
-app.use(session({
-  secret: 'secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: true, sameSite: 'none', maxAge: 2 * 60 * 60 * 1000 }
-}))
 
 app.set('trust proxy', true)
 

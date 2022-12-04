@@ -1,6 +1,5 @@
 import { AuthChecker } from 'type-graphql'
 import { ExpressContext } from 'apollo-server-express'
-import { Session } from 'express-session'
 
 import { Login, User } from '@/schemas/accounts'
 import { getInstance } from '@/configs/axios'
@@ -27,9 +26,7 @@ export const registerUser = async (
   return { token, user: data }
 }
 
-export const logoutUser = async (session: Session): Promise<boolean> => {
-  session.token = undefined
-
+export const logoutUser = async (): Promise<boolean> => {
   return true
 }
 
