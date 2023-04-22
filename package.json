@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AIMS-UN/api-gateway.git"
+    "url": "git+https://github.com/AIMS-UN/api_gateway.git"
   },
   "author": "",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/AIMS-UN/api-gateway/issues"
+    "url": "https://github.com/AIMS-UN/api_gateway/issues"
   },
-  "homepage": "https://github.com/AIMS-UN/api-gateway#readme",
+  "homepage": "https://github.com/AIMS-UN/api_gateway#readme",
   "config": {
     "commitizen": {
       "path": "node_modules/cz-git"
